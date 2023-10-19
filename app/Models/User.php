@@ -16,6 +16,10 @@ class User extends Authenticatable
     use Notifiable, HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function getEmailAttribute($value) {
+        return $value;
+      }
+
     /**
      * The attributes that are mass assignable.
      *

@@ -15,6 +15,19 @@
         </div>
     </div>
     <div class="row mt-3">
+    <div class="col-md-12">
+            <form action="{{ route('usuarios.principal') }}" method="GET">
+                <div class="input-group mb-0">
+                    <input type="text" class="form-control" name="search" placeholder="Buscar usuario">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -49,9 +62,11 @@
                                 <td>{{ $row->email }}</td>
                                 <td>{{ $row->password }}</td>
                                 <td>
-                                    <a href="{{ url('users/'.$row->id) }}" class="btn btn-warning">
-                                        <i class="fa-solid fa-edit"></i>
-                                    </a>
+                                <a href="{{ route('usuarios.editar', $row->id) }}" class="btn btn-warning">
+                        
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+
                                 </td>
                                 <td>
                                     <form method="POST" action="{{ url('users/'.$row->id) }}">
