@@ -10,24 +10,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->input('search');
+         
         $users = User::all();
-        if ($search) {
-            $users = User::query()
-                ->where('nombre', 'like', "%$search%")
-                ->orWhere('a_paterno', 'like', "%$search%")
-                ->orWhere('a_materno', 'like', "%$search%")
-                ->orWhere('num_empleado', 'like', "%$search%")
-                ->orWhere('telefono', 'like', "%$search%")
-                ->orWhere('cargo', 'like', "%$search%")
-                ->orWhere('campus', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->get();
-        
-        }
-        return view('usuarios.principal', compact('users')); 
+        return view('usuarios.principal', compact('users'));
     }
     
         public function create()
@@ -101,13 +88,16 @@ class UserController extends Controller
         return redirect()->route('usuarios.principal')
             ->with('success', 'Usuario actualizado exitosamente');
     }
-
-    public function destroy($id)
+    public function disableUser($id)
     {
         $user = User::find($id);
-        $user->delete();
-
+        
+        // Cambia el estado del usuario
+        $user->is_active = ($user->is_active == 1) ? 0 : 1;
+        
+        $user->save();
+    
         return redirect()->route('usuarios.principal')
-            ->with('success', 'Usuario eliminado exitosamente');
+            ->with('success', 'Estado del usuario actualizado correctamente');
     }
 }

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;  // Asegúrate de importar Request
-use Illuminate\Support\Facades\Auth;  // Asegúrate de importar Auth
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-
     use AuthenticatesUsers;
 
     protected $redirectTo = RouteServiceProvider::HOME;
@@ -20,37 +19,25 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    // Verifica si el usuario tiene is_active igual a 1
+    protected function is_active($user)
+    {
+        return $user->is_active == 1;
+    }
+
+    // Sobrescribe el método authenticated
     protected function authenticated(Request $request, $user)
     {
-        // Obtener email actualizado
-        $email = $user->email;
-
-        // Resetear flags
-        $user->update([
-            'email_changed' => false,
-            'password_changed' => false,
-        ]);
-
-        // Detectar cambios
-        if ($user->wasChanged(['email', 'password'])) {
-
-            // Cerrar sesión
+        if ($this->is_active($user)) {
+            // Si el usuario tiene is_active igual a 1, permitir el acceso
+            return redirect()->intended($this->redirectPath());
+        } else {
+            // Si el usuario tiene is_active igual a 0, denegar el acceso y cerrar sesión
             Auth::logout();
-
-            // Autenticar de nuevo con el email actualizado
-            if (Auth::attempt(['email' => $email, 'password' => $request->password])) {
-                return redirect()->intended($this->redirectPath());
-            }
-
-            // Mostrar mensaje de error
             return redirect()
                 ->back()
                 ->withInput($request->only('email', 'remember'))
-                ->withErrors(['email' => 'Credenciales incorrectas']);
-
+                ->withErrors(['email' => 'Tu cuenta está desactivada. Contacta al administrador.']);
         }
-
-        // Redireccionar
-        return redirect()->intended($this->redirectPath());
     }
 }

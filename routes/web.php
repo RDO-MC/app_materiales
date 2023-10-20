@@ -29,7 +29,7 @@ Route::get('/usuarios/crear', [UserController::class, 'create'])->name('usuarios
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
 Route::get('usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.editar');
 Route::put('usuarios/{id}', [UserController::class, 'update'])->name('usuarios.update');
-
+Route::put('/usuarios/{id}/disable', [UserController::class, 'disableUser'])->name('usuarios.disable');
 
 
 

@@ -14,23 +14,15 @@
             </button>
         </div>
     </div>
-    <div class="row mt-3">
-    <div class="col-md-12">
-            <form action="{{ route('usuarios.principal') }}" method="GET">
-                <div class="input-group mb-0">
-                    <input type="text" class="form-control" name="search" placeholder="Buscar usuario">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Buscar</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+
+    <input type="text" id="search" class="form-control" placeholder="Buscar">
+
+  
 
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="user-table" >
                     <thead>
                         <tr>
                             <th>#</th>
@@ -42,7 +34,7 @@
                             <th>CARGO</th>
                             <th>CAMPUS</th>
                             <th>CORREO</th>
-                            <th>CONTRASEÑA</th>
+                            <th>ESTADO</th>
                             <th>EDITAR</th>
                             <th>ELIMINAR</th>
                         </tr>
@@ -50,30 +42,41 @@
                     <tbody>
                         @php $i=1; @endphp
                         @foreach($users as $row)
-                            <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{ $row->nombre }}</td>
-                                <td>{{ $row->a_paterno}}</td>
-                                <td>{{ $row->a_materno }}</td>
-                                <td>{{ $row->num_empleado }}</td>
-                                <td>{{ $row->telefono }}</td>
-                                <td>{{ $row->cargo }}</td>
-                                <td>{{ $row->campus }}</td>
-                                <td>{{ $row->email }}</td>
-                                <td>{{ $row->password }}</td>
+                        <tr style="background-color: {{ $row->is_active == 0 ? 'red' : '' }}">
+                            <td>{{ $i++ }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->nombre }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->a_paterno }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->a_materno }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->num_empleado }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->telefono }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->cargo }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->campus }}</td>
+                            <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->email }}</td>
+                            <td>
+                                @if ($row->is_active == 0)
+                                    Inactivo
+                                @else
+                                    Activo
+                                @endif
+                            </td>
                                 <td>
                                 <a href="{{ route('usuarios.editar', $row->id) }}" class="btn btn-warning">
                         
-                                <i class="fas fa-edit"></i> Editar
+                                <i class="fas fa-edit">Editar</i> 
                             </a>
 
                                 </td>
                                 <td>
-                                    <form method="POST" action="{{ url('users/'.$row->id) }}">
-                                        @method("DELETE")
-                                        @csrf
-                                        <button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                                    </form>
+                                
+                                <form id="disable-form-{{ $row->id }}" method="POST" action="{{ route('usuarios.disable', $row->id) }}">
+                                    @method("PUT")
+                                    @csrf
+                                    <button class="btn {{ $row->is_active ? 'btn-danger' : 'btn-success' }}" onclick="return confirmAction({{ $row->id }})">
+                                        <i class="fas {{ $row->is_active ? 'fa-trash' : 'fa-check' }}" style="font-size: 8px;"></i>
+                                        {{ $row->is_active ? 'Baja' : 'Alta' }}
+                                    </button>
+                                    <input type="hidden" name="is_active" value="{{ $row->is_active ? 0 : 1 }}">
+                                </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -91,5 +94,39 @@
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+<script>
+$(document).ready(function() {
+    $("#search").on("input", function() {
+        var searchTerm = $(this).val().toLowerCase();
+
+        $("#user-table tbody tr").each(function() {
+            var row = $(this);
+
+            // Concatenamos todos los campos en un solo texto para buscar
+            var textToSearch = row.text().toLowerCase();
+
+            if (textToSearch.includes(searchTerm)) {
+                row.show();
+            } else {
+                row.hide();
+            }
+        });
+    });
+});
+</script>
+<script>
+    function confirmAction(userId, isActive) {
+        var action = isActive ? 'dar de baja' : 'dar de alta';
+        var confirmationMessage = '¿Estás seguro de que deseas ' + action + ' a este usuario?';
+
+        if (confirm(confirmationMessage)) {
+            document.getElementById('disable-form-' + userId).submit();
+        } else {
+            // El usuario canceló la acción
+            return false;
+        }
+    }
+</script>
+
+
 @stop
