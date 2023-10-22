@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class registro extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+    
+    protected $fillable = [
+       
+        'user_id',
+        'fecha_hora',
+        'direccion_ip',
+        'exito',
+      
+    ];
 }

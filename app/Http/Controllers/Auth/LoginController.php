@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\Registro; // Asegúrate de importar el modelo de Registro
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -29,7 +30,14 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($this->is_active($user)) {
-            // Si el usuario tiene is_active igual a 1, permitir el acceso
+            // Guardar registro
+            $registro = new Registro();
+            $registro->users_id = $user->id; 
+            $registro->fecha_hora = now();
+            $registro->direccion_ip = $request->ip();
+            $registro->exito = true;
+            $registro->save();
+
             return redirect()->intended($this->redirectPath());
         } else {
             // Si el usuario tiene is_active igual a 0, denegar el acceso y cerrar sesión

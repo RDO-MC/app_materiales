@@ -55,12 +55,12 @@
                             <div class="col-md-6">
                                 <input id="num_empleado" type="text" class="form-control @error('num_empleado') is-invalid @enderror" name="num_empleado" value="{{ old('num_empleado') }}" required autocomplete="num_empleado" autofocus>
 
-                                @error('num_empleado')
+                                @if ($errors->has('num_empleado'))
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                        <strong>{{ 'El usuario ya existe' }}</strong>
                                     </span>
-                                @enderror
-                            </div>
+                                @endif
+                         </div>
                         </div>
                         <div class="row mb-3">
                             <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('telefono') }}</label>
