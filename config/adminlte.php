@@ -324,7 +324,7 @@ return [
                 ],
                 [
                     'text' => 'BIENES MUEBLES',
-                    'url'  => '#',
+                    'url'  => '/muebles',
                 ],
                 [
                     'text' => 'BIENES INMUEBLES',
@@ -354,7 +354,7 @@ return [
             'submenu' => [
                 [
                     'text' => 'ASIGNAR',
-                    'url'  => '#',
+                    'url'  => '/asignacion',
                 ],
                 [
                     'text' => 'DEVOLUCION ',

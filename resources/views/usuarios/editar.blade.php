@@ -10,7 +10,7 @@
                     <div class="card-body">
                     <form id="editar-usuario-form" method="POST" action="{{ route('usuarios.update', $user->id) }}">
     <!-- ... Campos de edición ... -->
-    @csrf
+                            @csrf
                             @method('PUT')
                             <div class="row mb-3">
                                 <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('nombre') }}</label>

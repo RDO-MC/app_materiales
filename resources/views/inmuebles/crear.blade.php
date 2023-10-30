@@ -110,6 +110,23 @@
                                     @enderror
                                 </div>
                             </div>
+                           <div class="row mb-3">
+                                <label for="estado" class="col-md-4 col-form-label text-md-end">{{ __('Estado') }}</label>
+                                <div class="col-md-6">
+                                    <select id="estado" class="form-control" name="estado" required onchange="mostrarOtroEstado(this)">
+                                        <option value="Bien_Matenido">Bien matenido</option>
+                                        <option value="Necesita_Reparcion">Necesita Reparcion</option>
+                                        <option value="Desgastado">Desgastado</option>
+                                        
+                                    </select>
+                                    @error('estado')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+            
+                                </div>
+                            </div>
                             <div class="row mb-3">
                                 <label for="img_url" class="col-md-4 col-form-label text-md-end">{{ __('img_url') }}</label>
                                 <div class="col-md-6">
@@ -137,3 +154,6 @@
         </div>
     </div>
 @endsection
+@section('js')
+
+@stop

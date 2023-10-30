@@ -69,12 +69,17 @@
                             <td>
                                 @if ($row->status == 0)
                                     Inactivo
+                                    @elseif ($row->status == 1)
+                                    ACTIVO
+                                    @elseif($row->status == 2)
+                                    PRESTADO
                                 @else
-                                    Activo
+                                    ASIGNADO
                                 @endif
                             </td>
                            
                                 <td>
+                                    
                                 <a href="{{ route('inmuebles.editar', $row->id) }}" class="btn btn-warning">
                         
                                 <i class="fas fa-edit">Editar</i> 

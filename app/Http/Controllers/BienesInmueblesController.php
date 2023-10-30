@@ -65,7 +65,7 @@ public function store(Request $request)
         $bienes_inmuebles->val_catastral = $request->input('val_catastral');
         $bienes_inmuebles->val_comercial = $request->input('val_comercial');
         $bienes_inmuebles->img_url = 'uploads/bienes_inmuebles/' . $imageName;
-        $bienes_inmuebles->estado = 'bueno';
+        $bienes_inmuebles-> estado = $request->input('estado');
         $bienes_inmuebles->nota = '';
         $bienes_inmuebles->status = '1';
 
@@ -91,35 +91,56 @@ public function store(Request $request)
 }
 
 
-    
-    
-    
    
-    public function show(bienes_inmuebles $bienes_inmuebles)
+    public function show(Request $request,$id)
     {
-        $bienes_inmuebles = bienes_inmuebles::all();
-        return view('inmuebles.crear', compact('bienes_inmuebles'));
-    }
+       
+        $bienes_inmuebles = bienes_inmuebles::find($id); 
+        return view('inmuebles.show', compact('bienes_inmuebles'));
+      
 
-    
-    public function edit(bienes_inmuebles $bienes_inmuebles)
+    }
+    public function edit(Request $request, $id)
     {
-        $bienes_inmuebles = bienes_inmuebles::all();
+        $bienes_inmuebles = Bienes_Inmuebles::find($id);
+    
+        // Verificar si el bien inmueble ha sido dado de baja
+        if ($bienes_inmuebles->status == 0) {
+            return redirect()->route('inmuebles.principal')
+                ->with('error', 'No puedes editar un bien inmueble dado de baja');
+        }
+    
+        // Si el bien inmueble no está dado de baja, permitir la edición
         return view('inmuebles.editar', compact('bienes_inmuebles'));
     }
+    
 
-    public function update(Request $request, bienes_inmuebles $bienes_inmuebles)
-    {
-        $bienes_inmuebles->update([
-            'nombre' => $request->input('nombre'),
-            'descripcion' => $request->input('descripcion'),
-            
-            
-        ]);
-        return redirect()->route('inmuebles.principal')
-        ->with('success', 'inmueble actualizado exitosamente');
+    public function update(Request $request, $id)
+{
+    $bienes_inmuebles = Bienes_Inmuebles::find($id);
 
-    }
+    $bienes_inmuebles->update([
+        'nombre' => $request->input('nombre'),
+        'descripcion' => $request->input('descripcion'),
+        'num_escritura_propiedad' => $request->input('num_escritura_propiedad'),
+        'ins_reg_pub_prop' => $request->input('ins_reg_pub_prop'),
+        'estado_valuado' => $request->input('estado_valuado'),
+        'registro_contable' => $request->input('registro_contable'),
+        'num_cedula_catastral' => $request->input('num_cedula_catastral'),
+        'val_catastral' => $request->input('val_catastral'),
+        'val_comercial' => $request->input('val_comercial'),
+        'estado' => $request->input('estado'),
+        
+        
+        
+    ]);
+  
+     
+
+    return redirect()->route('inmuebles.principal')
+        ->with('success', 'Inmueble actualizado exitosamente');
+}
+
     public function disableUser(Request $request, $id)
     {
         $bienes_inmuebles = bienes_inmuebles::find($id);
@@ -135,7 +156,21 @@ public function store(Request $request)
         return redirect()->route('inmuebles.principal')
             ->with('success', 'Estado del bien inmueble fue actualizado correctamente');
     }
-    
+    public function getStatusText($status)
+    {
+        switch ($status) {
+            case 0:
+                return 'Inactivo';
+            case 1:
+                return 'Activo';
+            case 2:
+                return 'Préstamo';
+            case 3:
+                return 'Asignado';
+            default:
+                return 'Desconocido';
+        }
+    }
 }    
    
    
