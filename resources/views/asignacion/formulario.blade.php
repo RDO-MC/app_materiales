@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+<<<<<<< HEAD
     <div>
         @if ($usuarioSeleccionado)
             <p>Usuario Seleccionado: {{ $usuarioSeleccionado->nombre }} {{ $usuarioSeleccionado->a_paterno }} {{ $usuarioSeleccionado->a_materno }}</p>
@@ -107,4 +108,3 @@
 
 @section('js')
 
-@stop

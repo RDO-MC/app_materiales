@@ -44,7 +44,9 @@
                     <tbody>
                         @php $i=1; @endphp
                         @foreach($bienes_muebles as $mueble)
+
                         <tr style="background-color: {{ $mueble->status == 0 ? 'red' : ($mueble->status == 2 ? 'lightgreen' : ($mueble->status == 3 ? 'lightblue' : 'white')) }}">
+
 
                             <td>{{ $i++ }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->nombre }}</td>
@@ -59,13 +61,14 @@
                             
                             <td>
                                 @if ($mueble->status == 0)
-                                    INACTIVO
+                                   INACTIVO
                                 @elseif ($mueble->status == 1)
                                     ACTIVO
                                 @elseif ($mueble->status == 2)
                                     PRESTADO
                                 @else
                                     ASIGNADO
+                                   
                                 @endif
                             </td>
                             
@@ -75,6 +78,7 @@
                                 @else
                                     No se ha cargado una imagen
                                 @endif
+<<<<<<< HEAD
                             </td> 
                             <td>
                             <img src="{{ $mueble->qr }}" alt="Imagen del qr" style="max-width: 100px; max-height: 100px;">
@@ -98,6 +102,7 @@
                                     </form>
                                 @endif
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>

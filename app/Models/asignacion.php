@@ -15,7 +15,11 @@ class asignacion extends Model
         'bienes_muebles_id',
         'activos_nubes_id',
         'autorizo',
+<<<<<<< HEAD
         'users_id',
+=======
+        'user_id',
+>>>>>>> ffc2026891b3a2cd6cf89ee0916261c9ca2e08b2
         'fecha_de_asignacion',
         'origen_salida',
         'lugar_asignacion',

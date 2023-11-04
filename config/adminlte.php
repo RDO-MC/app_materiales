@@ -332,6 +332,7 @@ return [
                     'url'  => '/muebles',
                     'can'  => 'ver-materiales',
 
+
                 ],
                 [
                     'text' => 'BIENES INMUEBLES',

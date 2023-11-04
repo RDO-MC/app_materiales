@@ -80,8 +80,9 @@
                             </td>
                            
                                 <td>
+
                                 @if ($row->status != 2 && $row->status != 3)
-                                <a href="{{ route('inmuebles.editar', $row->id) }}" class="btn btn-warning">
+                             <a href="{{ route('inmuebles.editar', $row->id) }}" class="btn btn-warning">
                                 <i class="fas fa-edit">Editar</i> 
                             </a>
                             @endif

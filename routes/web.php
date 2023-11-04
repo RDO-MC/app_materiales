@@ -5,7 +5,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BienesInmueblesController;
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\BienesMueblesController;
+
 use App\Http\Controllers\PrestamosController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/roles', 'RoleController@selectRole')->name('roles');
 
 //usuarios
+
 Route::group(['middleware' => ['role:superadmin']], function() {
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.principal');
     Route::get('/usuarios/crear', [UserController::class, 'create'])->name('usuarios.crear');
@@ -48,8 +52,11 @@ Route::get('/bienes_muebles/{id}', [BienesMueblesController::class, 'show'])->na
 Route::get('/muebles/{bienes_muebles}/editar', [BienesMueblesController::class, 'edit'])->name('muebles.editar');
 Route::put('/muebles/{bienes_muebles}', [BienesMueblesController::class, 'update'])->name('muebles.update');
 Route::put('/muebles/{id}/disable', [BienesMueblesController::class, 'disablemuebles'])->name('muebles.disable');
+
 });
 Route::group(['middleware' => ['role:superadmin']], function() {
+
+
 //BIENES INMUEBLES
 Route::get('/inmuebles', [BienesInmueblesController::class, 'index'])->name('inmuebles.principal');
 Route::get('/inmuebles/crear', [BienesInmueblesController::class, 'create'])->name('inmuebles.crear');
@@ -76,3 +83,4 @@ Route::get('/prestamos', [PrestamosController::class, 'index'])->name('prestamos
 Route::get('/prestamos/crear', [PrestamosController::class, 'create'])->name('prestamos.crear');
 Route::post('/prestamos', [PrestamosController::class, 'store'])->name('prestamos.store');
 Route::post('/prestamos/devolver/{prestamoId}', [PrestamosController::class, 'devolver'])->name('prestamos.devolver');  
+

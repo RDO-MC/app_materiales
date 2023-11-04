@@ -3,7 +3,11 @@
 @section('title', 'BIENES MUEBLES')
 
 @section('content_header')
+<<<<<<< HEAD
     <h1>BIENES MUEBLES</h1>
+=======
+    <h1>BIENES INMUEBLES</h1>
+>>>>>>> ffc2026891b3a2cd6cf89ee0916261c9ca2e08b2
 @stop
 
 @section('content')
@@ -14,6 +18,7 @@
 
 
 <form method="POST" action="{{ route('asignacion.proceso1') }}">
+
     @csrf
     
     <input type="hidden" name="user_id" value="{{ $user_id }}">
