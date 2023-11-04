@@ -45,7 +45,8 @@
                     <tbody>
                         @php $i=1; @endphp
                         @foreach($bienes_inmuebles as $row)
-                        <tr style="background-color: {{ $row->status == 0 ? 'red' : '' }}">
+                        <tr style="background-color: {{ $row->status == 0 ? 'red' : ($row->status == 2 ? 'lightgreen' : ($row->status == 3 ? 'lightblue' : 'white')) }}">
+
                             <td>{{ $i++ }}</td>
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->nombre }}</td>
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->descripcion }}</td>
@@ -69,22 +70,27 @@
                             <td>
                                 @if ($row->status == 0)
                                     Inactivo
+                                    @elseif ($row->status == 1)
+                                    ACTIVO
+                                    @elseif($row->status == 2)
+                                    PRESTADO
                                 @else
-                                    Activo
+                                    ASIGNADO
                                 @endif
                             </td>
                            
                                 <td>
+                                @if ($row->status != 2 && $row->status != 3)
                                 <a href="{{ route('inmuebles.editar', $row->id) }}" class="btn btn-warning">
-                        
                                 <i class="fas fa-edit">Editar</i> 
                             </a>
-
+                            @endif
                                 </td>
                                 
                                 
                                 
                                 <td>
+                                @if ($row->status != 2 && $row->status != 3)
                                     <form id="disable-form-{{ $row->id }}" method="POST" action="{{ route('inmuebles.disable', $row->id) }}">
                                         @method("PUT")
                                         @csrf
@@ -94,6 +100,7 @@
                                         <input type="hidden" name="status" value="{{ $row->status ? 0 : 1 }}">
                                         <input type="hidden" id="nota_{{ $row->id }}" name="nota" value="">
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

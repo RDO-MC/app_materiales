@@ -20,7 +20,6 @@ return new class extends Migration
             $table->bigInteger('bienes_muebles_id')->unsigned();
             $table->bigInteger('bienes_inmuebles_id')->unsigned();
             $table->bigInteger('activos_nubes_id')->unsigned();
-            $table->string('autorizo');
             $table->bigInteger('users_id')->unsigned();
             $table->date('fecha_de_asignacion');
             $table->string('origen_salida', 50);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Asignacion;
 
 class bienes_inmuebles extends Model
 {
@@ -26,4 +27,9 @@ class bienes_inmuebles extends Model
 
     ];
 
+     // Relación con el modelo Asignacion
+     public function Asignaciones()
+     {
+         return $this->hasMany(asignacion::class, 'asignaciones_id');
+     }
 }

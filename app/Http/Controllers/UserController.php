@@ -22,7 +22,7 @@ class UserController extends Controller
         return view('usuarios.crear', ['role' => $roles]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request,  Role $role)
     {
         $this->validate($request, [
             'nombre' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],

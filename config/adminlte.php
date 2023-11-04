@@ -297,7 +297,7 @@ return [
         [
             'type'         => 'navbar-search',
             'text'         => 'search',
-            'topnav_right' => true,
+            'topnav_right' => false,
         ],
         
        
@@ -307,28 +307,37 @@ return [
          
        
         ['header' => 'INICIO'],
+        
       
         [
             'text' => 'USUARIOS',
             'url'  => '/usuarios',
             'icon' => '',
+            'can'  => 'ver-usuarios',
         ],
       
         [
             'text'    => 'MATERIALES',
             'icon'    => '',
+            'can'  => 'ver-materiales',
             'submenu' => [
                 [
                     'text' => 'ACTIVOS NUBE',
                     'url'  => '#',
+                    'can'  => 'ver-materiales',
+
                 ],
                 [
                     'text' => 'BIENES MUEBLES',
-                    'url'  => '#',
+                    'url'  => '/muebles',
+                    'can'  => 'ver-materiales',
+
                 ],
                 [
                     'text' => 'BIENES INMUEBLES',
                     'url'  => '/inmuebles',
+                    'can'  => 'ver-materiales',
+
                 ],
                
             ],
@@ -336,14 +345,18 @@ return [
         [
             'text'    => 'PRESTAMOS',
             'icon'    => '',
+            'can'  => 'ver-prestamos',
+
             'submenu' => [
                 [
                     'text' => 'PRESTAMO',
-                    'url'  => '#',
+                    'url'  => '/prestamos',
+                    'can'  => 'ver-prestamos',
                 ],
                 [
                     'text' => 'DEVOLUCION',
-                    'url'  => '#',
+                    'url'  => '/prestamos',
+                    'can'  => 'ver-prestamos',
                 ],
                
             ],
@@ -351,10 +364,12 @@ return [
         [
             'text'    => 'ASIGNACION',
             'icon'    => '',
+            'can'  => 'ver-asignacion',
+
             'submenu' => [
                 [
                     'text' => 'ASIGNAR',
-                    'url'  => '#',
+                    'url'  => '/asignacion',
                 ],
                 [
                     'text' => 'DEVOLUCION ',
@@ -363,39 +378,12 @@ return [
                 
             ],
         ],
-        [
-            'text'    => 'SUBPRESTAMOS',
-            'icon'    => '',
-            'submenu' => [
-                [
-                    'text' => 'SUBPRESTAMO',
-                    'url'  => '#',
-                ],
-                [
-                    'text' => 'DEV-SUBPRESTAMO',
-                    'url'  => '#',
-                ],
-
-                 ],
-            ],
-            [
-                'text'    => 'REASIGNACION',
-                'icon'    => '',
-                'submenu' => [
-                    [
-                        'text' => 'REASIGNACION',
-                        'url'  => '#',
-                    ],
-                    [
-                        'text' => 'DEV-REASIGNACION',
-                        'url'  => '#',
-                    ],
-                   
-                ],
-            ],
+           
             [
                 'text'    => 'RESGUARDOS',
                 'icon'    => '',
+            'can'  => 'ver-resguardos',
+
                 'submenu' => [
                     [
                         'text' => 'PRESTAMO',
@@ -412,6 +400,8 @@ return [
         [
             'text'    => 'REPORTES',
             'icon'    => '',
+            'can'  => 'ver-reportes',
+
             'submenu' => [
                 [
                     'text' => 'MENSUAL',
