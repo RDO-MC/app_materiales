@@ -60,4 +60,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Asignacion::class, 'user_id');
     }
+    public function prestamos()
+    {
+        return $this->hasMany(Prestamos::class, 'user_id');
+    }
 }

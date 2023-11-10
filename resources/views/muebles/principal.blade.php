@@ -25,20 +25,24 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Factura</th>
-                            <th>N_Serie</th>
-                            <th>Importe</th>
-                            <th>Partida</th>
-                            <th>Identificación del Bien</th>
-                            <th>Marca</th>
-                            <th>Estado</th>
+                            <th>FECHA</th>
+                            <th>CVE CONAC</th>
+                            <th>CVE INVENTARIO INTERNO</th>
+                            <th>CVE INVENTARIO SEFIPLAN</th>
+                            <th>NOMBRE</th>
+                            <th>DESCRIPCION</th>
+                            <th>FACTURA</th>
+                            <th>N_SERIE</th>
+                            <th>IMPORTE</th>
+                            <th>PARTIDA</th>
+                            <th>IDENTIFICACION DEL BIEN</th>
+                            <th>MARCA</th>
+                            <th>ESTADO</th>
                             <th>STATUS</th>
                             <th>IMG</th>
                             <th>QR</th>
-                            <th>Editar</th>
-                            <th>Eliminar</th>
+                            <th>EDITAR</th>
+                            <th>ELIMINAR</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +53,10 @@
 
 
                             <td>{{ $i++ }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->fecha }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_conac }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_sefiplan }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_interno }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->nombre }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->descripcion }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->factura }}</td>
@@ -78,7 +86,7 @@
                                 @else
                                     No se ha cargado una imagen
                                 @endif
-<<<<<<< HEAD
+
                             </td> 
                             <td>
                             <img src="{{ $mueble->qr }}" alt="Imagen del qr" style="max-width: 100px; max-height: 100px;">

@@ -8,11 +8,6 @@ use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 
-
-
-
-
-
 class BienesMueblesController extends Controller
 {
     public function index()

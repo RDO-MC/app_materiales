@@ -3,11 +3,10 @@
 @section('title', 'BIENES MUEBLES')
 
 @section('content_header')
-<<<<<<< HEAD
+
     <h1>BIENES MUEBLES</h1>
-=======
-    <h1>BIENES INMUEBLES</h1>
->>>>>>> ffc2026891b3a2cd6cf89ee0916261c9ca2e08b2
+
+
 @stop
 
 @section('content')
@@ -86,10 +85,11 @@
                             <img src="{{ $mueble->qr }}" alt="Imagen del qr" style="max-width: 100px; max-height: 100px;">
                             </td>
                             <td>
-                            <button class="btn btn-success" id="selectButton_{{ $mueble->id }}" data-id="{{ $mueble->id }}" onclick="toggleSelection(this)">
-                                <span id="selectText_{{ $mueble->id }}">Seleccionar</span>
-                            </button>
+                                <button class="btn btn-success" id="selectButton_{{ $mueble->id }}" data-id="{{ $mueble->id }}" onclick="toggleSelection(this)">
+                                    <span id="selectText_{{ $mueble->id }}">Seleccionar</span>
+                                </button>
 
+                            </td>
                         </td>
                     </tr>
                     @endforeach

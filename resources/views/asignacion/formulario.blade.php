@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-<<<<<<< HEAD
+
     <div>
         @if ($usuarioSeleccionado)
             <p>Usuario Seleccionado: {{ $usuarioSeleccionado->nombre }} {{ $usuarioSeleccionado->a_paterno }} {{ $usuarioSeleccionado->a_materno }}</p>
@@ -29,6 +29,13 @@
                     <li>{{ $mueble->nombre }} - {{ $mueble->descripcion }}</li>
                 @endforeach
             </ul>
+        @elseif ($tipo_bien === 'activos_nubes')
+            <p>Activos Nube Seleccionados:</p>
+            <ul>
+                @foreach ($bienesSeleccionados as $activos)
+                    <li>{{ $activos->nombre }} - {{ $activos->descripcion }}</li>
+                @endforeach
+            </ul>
         @endif
 
         <!-- Agrega un formulario para capturar datos adicionales -->
@@ -47,7 +54,7 @@
                 </div>
                 <div class="col-md-4">
                     <label for="lugar_asignacion">Lugar de Asignación</label>
-                    <textarea name ="lugar_asignacion" class="form-control" id="lugar_asignacion" placeholder="Lugar de asignación"></textarea>
+                    <textarea name="lugar_asignacion" class="form-control" id="lugar_asignacion" placeholder="Lugar de asignación"></textarea>
                 </div>
             </div>
 
@@ -67,6 +74,16 @@
                     <div class="col-md-4">
                         <label for="campo_especifico_muebles">Campo Específico para Muebles:</label>
                         <input type="text" name="campo_especifico_muebles" class="form-control" id="campo_especifico_muebles" placeholder="Campo Específico">
+                    </div>
+                </div>
+            @endif
+
+            <!-- Campos específicos para activos nube -->
+            @if ($tipo_bien === 'activos_nubes')
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="campo_especifico_activos_nube">Campo Específico para Activos Nube:</label>
+                        <input type="text" name="campo_especifico_activos_nube" class="form-control" id="campo_especifico_activos_nube" placeholder="Campo Específico">
                     </div>
                 </div>
             @endif
@@ -107,4 +124,3 @@
 @stop
 
 @section('js')
-

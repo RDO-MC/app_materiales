@@ -69,6 +69,7 @@ class PrestamosController extends Controller
     
         return redirect()->route('prestamos.principal')->with('success', 'Préstamos creados correctamente');
     }
+    
 
     public function devolver(Request $request, $prestamoId)
 {

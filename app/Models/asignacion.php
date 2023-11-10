@@ -15,11 +15,7 @@ class asignacion extends Model
         'bienes_muebles_id',
         'activos_nubes_id',
         'autorizo',
-<<<<<<< HEAD
         'users_id',
-=======
-        'user_id',
->>>>>>> ffc2026891b3a2cd6cf89ee0916261c9ca2e08b2
         'fecha_de_asignacion',
         'origen_salida',
         'lugar_asignacion',
@@ -30,15 +26,23 @@ class asignacion extends Model
         'status',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     
     public function bienesInmuebles()
     {
-        return $this->belongsTo(BienesInmuebles::class, 'bienes_inmuebles_id');
+        return $this->belongsTo(Bienes_inmuebles::class, 'bienes_inmuebles_id');
     }
-    
+    public function bienesMuebles()
+    {
+        return $this->belongsTo(Bienes_muebles::class, 'bienes_muebles_id');
+    }
+    public function activosNubes()
+    {
+        return $this->belongsTo(Activos_nube::class, 'activos_nubes_id');
+    }
+    public function user()
+{
+    return $this->belongsTo(User::class, 'users_id');
+}
+
 }

@@ -313,31 +313,44 @@ return [
             'text' => 'USUARIOS',
             'url'  => '/usuarios',
             'icon' => '',
-            'can'  => 'ver-usuarios',
+            'can' => 'ver-usuarios'
+            
+        ],  
+         [
+            'text' => 'ASIGNADOS',
+            'url'  => '/prestamos/materiales',
+            'icon' => '',
+            'can' => 'ver-asignados'
+            
         ],
       
         [
             'text'    => 'MATERIALES',
             'icon'    => '',
-            'can'  => 'ver-materiales',
+            'can' => 'ver-materiales',
+            
+            
             'submenu' => [
                 [
                     'text' => 'ACTIVOS NUBE',
-                    'url'  => '#',
-                    'can'  => 'ver-materiales',
+                    'url'  => '/activos',
+                    'can' => 'ver-materiales'
+                   
 
                 ],
                 [
                     'text' => 'BIENES MUEBLES',
                     'url'  => '/muebles',
-                    'can'  => 'ver-materiales',
+                    'can' => 'ver-materiales',
+                  
 
 
                 ],
                 [
                     'text' => 'BIENES INMUEBLES',
                     'url'  => '/inmuebles',
-                    'can'  => 'ver-materiales',
+                    'can' => 'ver-materiales',
+                  
 
                 ],
                
@@ -346,35 +359,41 @@ return [
         [
             'text'    => 'PRESTAMOS',
             'icon'    => '',
-            'can'  => 'ver-prestamos',
+            'can' => 'ver-prestamos',
+            
 
             'submenu' => [
                 [
                     'text' => 'PRESTAMO',
                     'url'  => '/prestamos',
-                    'can'  => 'ver-prestamos',
+                    'can' => 'ver-prestamos',
+                    
                 ],
                 [
                     'text' => 'DEVOLUCION',
-                    'url'  => '/prestamos',
-                    'can'  => 'ver-prestamos',
+                    'url'  => '/prestamos/devoluciones',
+                    'can' => 'ver-prestamos',
                 ],
+               
                
             ],
         ],
         [
             'text'    => 'ASIGNACION',
             'icon'    => '',
-            'can'  => 'ver-asignacion',
+            'can' => 'ver-asignacion',
+           
 
             'submenu' => [
                 [
                     'text' => 'ASIGNAR',
                     'url'  => '/asignacion',
+                    'can' => 'ver-asignacion',
                 ],
                 [
                     'text' => 'DEVOLUCION ',
-                    'url'  => '#',
+                    'url'  => '/asignacion/devoluciones',
+                    'can' => 'ver-asignacion',
                 ],
                 
             ],
@@ -383,16 +402,19 @@ return [
             [
                 'text'    => 'RESGUARDOS',
                 'icon'    => '',
-            'can'  => 'ver-resguardos',
+                'can' => 'ver-resguardos',
+            
 
                 'submenu' => [
                     [
                         'text' => 'PRESTAMO',
                         'url'  => '#',
+                        'can' => 'ver-resguardos',
                     ],
                     [
                         'text' => 'ASIGNACION',
                         'url'  => '#',
+                        'can' => 'ver-resguardos'
                     ],
                    
                 ],
@@ -401,20 +423,24 @@ return [
         [
             'text'    => 'REPORTES',
             'icon'    => '',
-            'can'  => 'ver-reportes',
+            'can' => 'ver-reportes',
+            
 
             'submenu' => [
                 [
                     'text' => 'MENSUAL',
                     'url'  => '#',
+                    'can' => 'ver-reportes',
                 ],
                 [
                     'text' => 'ANUAL',
                     'url'  => '#',
+                    'can' => 'ver-reportes',
                 ],
                 [
                     'text' => 'GENERAL',
                     'url'  => 'https://apps.google.com/meet/',
+                    'can' => 'ver-reportes',
                 ],
                
             ],

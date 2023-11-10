@@ -6,8 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prestamos extends Model
 {
-    protected $table = 'prestamos';
+   
     use HasFactory;
+    protected $table = 'prestamos'; 
+    protected $fillable = [
+        'bienes_inmuebles_id',
+        'bienes_muebles_id',
+        'activos_nubes_id',
+        'users_id',
+        'lugar_de_prestamo',
+        'fecha_de_prestamo',
+        'estado',
+        'notas',
+        'fecha_de_devolucion',
+        'observaciones',
+        'status',
+    ];
 
     public function bienes_muebles()
     {

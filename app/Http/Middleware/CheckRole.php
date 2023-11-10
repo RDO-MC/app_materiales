@@ -14,14 +14,13 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
-        
-            if(Auth::user()->hasRole($role)) {
-                return $next($request);
-            }
-    
-            return redirect('home'); // redireccionar si no tiene permisos
-        
-}
+        // Verifica si el usuario tiene al menos uno de los roles especificados
+        if (Auth::check() && Auth::user()->hasAnyRole($roles)) {
+            return $next($request);
+        }
+
+        return redirect('home'); // Redireccionar si no tiene permisos
+    }
 }
