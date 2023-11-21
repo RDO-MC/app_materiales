@@ -13,6 +13,7 @@
                             <label for="usuario" class="col-md-2 col-form-label text-md-end">{{ __('Usuario') }}</label>
                             <div class="col-md-8">
                                 <select id="usuario" class="form-control @error('usuario') is-invalid @enderror" name="usuario" required>
+                                    <option></option>
                                     @foreach ($users as $user) 
                                         <option value="{{ $user->id }}">id:{{ $user->id }} #empl:{{ $user->num_empleado }}  nombre:{{ $user->nombre }} {{ $user->a_paterno }}</option>
                                     @endforeach
@@ -30,6 +31,7 @@
                             <label for="tipo_bien" class="col-md-2 col-form-label text-md-end">{{ __('Tipo de Bien') }}</label>
                             <div class="col-md-8">
                                 <select id="tipo_bien" class="form-control @error('tipo_bien') is-invalid @enderror" name="tipo_bien" required>
+                                    <option></option>
                                     <option value="bienes_muebles">Bienes Muebles</option>
                                     <option value="bienes_inmuebles">Bienes Inmuebles</option>
                                 </select>
@@ -113,17 +115,17 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="estado" class="col-md-2 col-form-label text-md-end">{{ __('Estado') }}</label>
+                            <label for="estado" class="col-md-2 col-form-label text-md-end" >{{ __('Estado') }}</label>
                             <div class="col-md-8">
                                 <select id="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" required>
+                                    <option></option>
                                     <option value="Bueno">Bueno</option>
                                     <option value="Regular">Regular</option>
                                     <option value="Malo">Malo</option>
-                                    <option value="Otro">Otro</option>
                                 </select>
                                 @error('estado')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                        <strong>{{ $message }}</strong> 
                                     </span>
                                 @enderror
                             </div>
@@ -150,20 +152,8 @@
                                 @enderror
                             </div>
                         </div>
-<!--
-                        <div class="row mb-3">
-                            <div class="col-md-8 offset-md-2">
-                                <button type="button" class="btn btn-primary" id="escanear_material">
-                                    {{ __('Escanear Material') }}
-                                </button>
-                            </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-2 offset-md-1">
-                                <div id="codigo_qr_viewer"></div>
-                            </div>
-                        </div>-->
+  
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-2">
                                 <button type="submit" class="btn btn-primary">
@@ -201,48 +191,4 @@
         }
     });
 </script>
-
-<script>
-    const botonEscanear = document.getElementById('escanear_material');
-    const codigoQRViewer = document.getElementById('codigo_qr_viewer');
-
-    // Configura QuaggaJS
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: codigoQRViewer,
-        },
-        decoder: {
-            readers: ["code_128_reader"],
-        },
-    }, function (err) {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        Quagga.start();
-    });
-
-    // Escuchar el botón de escaneo
-    botonEscanear.addEventListener('click', function () {
-        Quagga.onDetected(function (result) {
-            // Resultado del escaneo
-            const codigoQR = result.codeResult.code;
-
-            // Agrega el código QR a la lista de materiales escaneados
-            materialesPrestamo.push(codigoQR);
-
-            // Actualiza la lista en la interfaz de usuario
-            const listItem = document.createElement('li');
-            listItem.textContent = codigoQR;
-            listaMateriales.appendChild(listItem);
-
-            // Detiene el escaneo después de un resultado
-            Quagga.stop();
-        });
-    });
-</script>
-
-
 @stop

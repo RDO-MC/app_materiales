@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\activos_nube;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\actividades;///////////////////////////////////
+use PDF;
+use Illuminate\Support\Facades\View;
+
 
 class ActivosNubeController extends Controller
 {
@@ -15,6 +20,7 @@ class ActivosNubeController extends Controller
     public function index()
     {
         $activos_nube = activos_nube::all();
+        $activos_nube = activos_nube::orderByRaw("FIELD(status, 1, 2, 3, 0)")->get();
         return view('activos.principal', compact('activos_nube'));
     }
 
@@ -41,17 +47,17 @@ class ActivosNubeController extends Controller
         $request->validate([
             'fecha_adquisicion' => 'required',
             'fecha_vencimiento' => 'required',
-            'version' => 'required',
-            'cve_conac' => 'required',
-            'cve_inventario_sefiplan' => 'required',
-            'cve_inventario_interno' => 'required',
-            'nombre' => 'required',
-            'descripcion' => 'required',
-            'factura' => 'required',
-            'num_serie' => 'required',
-            'importe' => 'required',
-            'partida' => 'required',
-            'identificacion_del_bien' => 'required',
+            'version' => 'required|regex:/^[A-Za-z0-9.\s]+$/',
+            'cve_conac' => 'required|numeric',
+            'cve_inventario_sefiplan' => 'required|regex:/^[A-Z\/]+$/',
+            'cve_inventario_interno' => 'required|regex:/^[A-Z0-9]+$/|unique:activos_nubes',
+            'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'factura' => 'required|regex:/^[A-Za-z0-9\-]+$/',
+            'num_serie' => 'required|regex:/^[A-Z\/]+$/',
+            'importe' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'partida' => 'required|numeric',
+            'identificacion_del_bien' => ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             'estado' => 'required',
             'img_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:6144', // 6144 kiactivos_nube
         ]);
@@ -85,6 +91,9 @@ class ActivosNubeController extends Controller
             $activos_nube->status = '1';
 
             $activos_nube->save();
+            $accion = 'CREÓ UN NUEVO ACTIVO NUBE CON cve_inventario_interno :';
+            $detalles = ['cve_inventario_interno' => $activos_nube->cve_inventario_interno];
+            $this->registrarActividad($accion, $detalles);
 
         // Obtiene el ID del bien inmueble después de guardarlo
         $activoNubeId = $activos_nube->id;
@@ -113,32 +122,41 @@ class ActivosNubeController extends Controller
         return view('activos.editar', compact('activos_nube'));
     }
 
-    public function update(Request $request, activos_nube $activos_nube)
+    public function update(Request $request, activos_nube $activos_nube )
     {
         $data = $request->validate([
 
 
             'fecha_adquisicion' => 'required',
             'fecha_vencimiento' => 'required',
-            'version' =>'required',
-            'cve_conac' => 'required',
-            'cve_inventario_sefiplan' => 'required',
-            'cve_inventario_interno' => 'required',
-            'nombre' => 'required',
-            'descripcion' => 'required',
-            'factura' => 'required',
-            'num_serie' => 'required',
-            'importe' => 'required',
-            'partida' => 'required',
-            'identificacion_del_bien' => 'required',
+            'version' => 'required|regex:/^[A-Za-z0-9.\s]+$/', 
+            'cve_conac' => 'required|numeric',
+            'cve_inventario_sefiplan' => 'required|regex:/^[A-Z\/]+$/',
+            'cve_inventario_interno' => [
+                'required',
+                'regex:/^[A-Z0-9]+$/',
+                Rule::unique('activos_nubes')->ignore($activos_nube->id),
+            ],
+            'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'factura' => 'required|regex:/^[A-Za-z0-9\-]+$/',
+            'num_serie' => 'required|regex:/^[A-Z\/]+$/',
+            'importe' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'partida' => 'required|numeric',
+            'identificacion_del_bien' => ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             
             'estado' => 'required',
         ]);
+        
     
-        // Elimina la imagen anterior si se proporciona una nueva imagen
-
-    
+        $nombre = ucwords(strtolower(trim($request->input('nombre'))));
+        $descripcion = ucwords(strtolower(trim($request->input('descripcion'))));
+        $identificacion_del_bien = ucwords(strtolower(trim($request->input('identificacion_del_bien'))));
         $activos_nube->update($data);
+
+        $accion = 'EDITO UN ACTIVO NUBE CON cve_inventario_interno:';
+        $detalles = ['cve_inventario_interno' => $activos_nube->cve_inventario_interno];
+        $this->registrarActividad($accion, $detalles);
     
         return redirect()->route('activos.principal');
     }
@@ -149,7 +167,34 @@ class ActivosNubeController extends Controller
         $activos_nube = activos_nube::find($id);
         $activos_nube->status = ($activos_nube->status == 1) ? 0 : 1;
         $activos_nube->save();
+                // Acción para registrar
+                $accion = ($activos_nube->status == 0) ? 'DIO DE BAJA ACTIVO NUBE CON cve_inventario_interno :' : 'HABILITÓ ACTIVO NUBE CON cve_inventario_interno :';
+                // Detalles para registrar
+                $detalles = ['cve_inventario_interno' => $activos_nube->cve_inventario_interno];
+                $this->registrarActividad($accion, $detalles);
 
         return redirect()->route('activos.principal')->with('success', 'Estado del bien mueble actualizado correctamente');
+    }
+    private function registrarActividad($accion, $detalles = [])
+    {
+        actividades::create([
+            'users_id' => auth()->user()->id,
+            'actividad' => $accion . ' ' . $detalles['cve_inventario_interno'],
+            'fecha_hora' => now(),
+            // Puedes agregar más información si es necesario
+        ]);
+    }
+    ///IMPRIMIR QR 
+    public function imprimirQR()
+    {
+        $activos_nube = activos_nube::all();
+    
+        // Utiliza la vista sin cargarla en el navegador
+        $html = View::make('activos.qr', compact('activos_nube'))->render();
+    
+        $pdf = PDF::loadHTML($html);
+        $pdf->setPaper('letter', 'portrait'); // Tamaño del papel: carta en orientación vertical
+    
+        return $pdf->download('activos.qr.pdf');
     }
 }

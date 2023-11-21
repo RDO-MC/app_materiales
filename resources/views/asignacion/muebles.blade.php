@@ -15,9 +15,8 @@
     $bienesMueblesSeleccionados = null; // Asigna un valor apropiado aquí si es necesario
 @endphp
 
-
-<form method="POST" action="{{ route('asignacion.proceso1') }}">
-
+ 
+<form method="POST" action="{{ route('asignacion.proceso1') }}" onsubmit="return validateSelection()">
     @csrf
     
     <input type="hidden" name="user_id" value="{{ $user_id }}">
@@ -27,7 +26,13 @@
     <button type="submit" class="btn btn-primary">Continuar</button>
 </form>
 
-<input type="text" id="search" class="form-control" placeholder="Buscar">
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="text" id="search" class="form-control" placeholder="Buscar por Nombre, Descripción o CVE Inventario Interno">
+        </div>
+    </div>
+</div>
 
 <div class="row mt-3">
         <div class="col-md-12">
@@ -106,24 +111,41 @@
 
 @section('js')
 <script>
-    $(document).ready(function() {
-        $("#search").on("input", function() {
+    $(document).ready(function () {
+        $("#search").on("input", function () {
             var searchTerm = $(this).val().toLowerCase();
 
-            $("#bienes_inmuebles-table tbody tr").each(function() {
+            $("table tbody tr").each(function () {
                 var row = $(this);
+                var columns = row.find('td'); // Obtén todas las columnas de la fila
 
-                // Concatenamos todos los campos en un solo texto para buscar
-                var textToSearch = row.text().toLowerCase();
+                var found = false;
 
-                if (textToSearch.includes(searchTerm)) {
-                    row.show();
-                } else {
-                    row.hide();
-                }
+                // Itera sobre las columnas y verifica si alguna contiene el término de búsqueda
+                columns.each(function () {
+                    var textToSearch = $(this).text().toLowerCase();
+                    if (textToSearch.includes(searchTerm)) {
+                        found = true;
+                        return false; // Sale del bucle si se encuentra una coincidencia en alguna columna
+                    }
+                });
+
+                // Muestra u oculta la fila según si se encontró una coincidencia
+                found ? row.show() : row.hide();
             });
         });
     });
+</script>
+<script>
+    function validateSelection() {
+        // Check if there are any selected bienes inmuebles
+        if (selectedBienes.length === 0) {
+            alert('Por favor, selecciona al menos un bien mueble antes de continuar.');
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+    }
 </script>
 
 <script>

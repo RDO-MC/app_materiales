@@ -13,7 +13,7 @@
                             @csrf
                             @method('PUT')
                             <div class="row mb-3">
-                                <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('nombre') }}</label>
+                                <label for="nombre" class="col-md-4 col-form-label text-md-end">{{ __('NOMBRE') }}</label>
                                 <div class="col-md-6">
                                     <input id="nombre" type="text" class="form-control @error('nombre') is-invalid @enderror" name="nombre" value="{{ $user->nombre }}" required autofocus>
                                     @error('nombre')
@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="a_paterno" class="col-md-4 col-form-label text-md-end">{{ __('a_paterno') }}</label>
+                                <label for="a_paterno" class="col-md-4 col-form-label text-md-end">{{ __('APELLIDO PATERNO') }}</label>
                                 <div class="col-md-6">
                                     <input id="a_paterno" type="text" class="form-control @error('a_paterno') is-invalid @enderror" name="a_paterno" value="{{ $user->a_paterno }}" required autofocus>
                                     @error('a_paterno')
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="a_materno" class="col-md-4 col-form-label text-md-end">{{ __('a_materno') }}</label>
+                                <label for="a_materno" class="col-md-4 col-form-label text-md-end">{{ __('APELLIDO MATERNO') }}</label>
                                 <div class="col-md-6">
                                     <input id="a_materno" type="text" class="form-control @error('a_materno') is-invalid @enderror" name="a_materno" value="{{ $user->a_materno }}" required autofocus>
                                     @error('a_materno')
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="num_empleado" class="col-md-4 col-form-label text-md-end">{{ __('num_empleado') }}</label>
+                                <label for="num_empleado" class="col-md-4 col-form-label text-md-end">{{ __('NUMERO DE EMPLEADO') }}</label>
                                 <div class="col-md-6">
                                     <input id="num_empleado" type="text" class="form-control @error('num_empleado') is-invalid @enderror" name="num_empleado" value="{{ $user->num_empleado }}" required autofocus>
                                     @error('num_empleado')
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('telefono') }}</label>
+                                <label for="telefono" class="col-md-4 col-form-label text-md-end">{{ __('TELEFONO') }}</label>
                                 <div class="col-md-6">
                                     <input id="telefono" type="text" class="form-control @error('telefono') is-invalid @enderror" name="telefono" value="{{ $user->telefono }}" required autofocus>
                                     @error('telefono')
@@ -68,7 +68,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="cargo" class="col-md-4 col-form-label text-md-end">{{ __('cargo') }}</label>
+                                <label for="cargo" class="col-md-4 col-form-label text-md-end">{{ __('CARGO') }}</label>
                                 <div class="col-md-6">
                                     <input id="cargo" type="text" class="form-control @error('cargo') is-invalid @enderror" name="cargo" value="{{ $user->cargo }}" required autofocus>
                                     @error('cargo')
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="campus" class="col-md-4 col-form-label text-md-end">{{ __('campus') }}</label>
+                                <label for="campus" class="col-md-4 col-form-label text-md-end">{{ __('CAMPUS') }}</label>
                                 <div class="col-md-6">
                                     <input id="campus" type="text" class="form-control @error('campus') is-invalid @enderror" name="campus" value="{{ $user->campus }}" required autofocus>
                                     @error('campus')
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('email') }}</label>
+                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('E-MAIL') }}</label>
                                 <div class="col-md-6">
                                     <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $user->email }}" required autofocus>
                                     @error('email')
@@ -100,7 +100,31 @@
                                     @enderror
                                 </div>
                             </div>
-                           
+                            <div class="row mb-3">
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('CONTRASEÑA') }}</label>
+                            <div class="col-md-6">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" autocomplete="new-password">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="password_confirmation" class="col-md-4 col-form-label text-md-end">{{ __('CONFIRMAR CONTRASEÑA') }}</label>
+                            <div class="col-md-6">
+                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="change_password" class="col-md-4 col-form-label text-md-end">{{ __('CAMBIAR CONTRASEÑA') }}</label>
+                            <div class="col-md-6">
+                                <input id="change_password" type="checkbox" name="change_password" {{ old('change_password') ? 'checked' : '' }}>
+                            </div>
+                        </div>
                             <!-- Repite los campos para editar la información del usuario (a_paterno, a_materno, num_empleado, etc.) -->
 
 

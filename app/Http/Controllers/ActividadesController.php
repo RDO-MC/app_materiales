@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 
 class ActividadesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $actividades = actividades::all();
+    
+    // Pasar los registros a la vista 'registros.principal'
+    return view('actividades.actividades', compact('actividades'));
     }
 
     /**

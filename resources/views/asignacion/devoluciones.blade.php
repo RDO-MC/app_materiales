@@ -24,13 +24,11 @@
                         <th>MUEBLES</th>
                         <th>INMUEBLES</th>
                         <th>ACTIVOS NUBE</th>
-                        <th>USUARIOS ID</th>
+                        <th>USUARIO NUM.EMPLEADO</th>
                         <th>LUGAR DE ASIGNACION</th>
                         <th>FECHA DE ASIGNACIONn</th>
                         <th>ESTADO</th>
                         <th>NOTAS</th>
-                        <th>FECHA DE DEVOLUCION</th>
-                        <th>OBSERVACIONES</th>
                         <th>STATUS</th>
                         <th>ACCION</th>
                     </tr>
@@ -39,20 +37,26 @@
                     @foreach($asignaciones as $asignacion)
                         <tr>
                             <td>{{ $asignacion->id }}</td>
-                            <td>{{ $asignacion->bienes_muebles_id }}</td>
-                            <td>{{ $asignacion->bienes_inmuebles_id }}</td>
-                            <td>{{ $asignacion->activos_nubes_id }}</td>
-                            <td>{{ $asignacion->users_id }}</td>
+                            <td>{{ optional($asignacion->bienesMuebles)->cve_inventario_interno }}</td>
+                            <td>{{ optional($asignacion->bienesInmuebles)->descripcion }}</td>
+                            <td>{{ optional($asignacion->activosNubes)->cve_inventario_interno }}</td>
+                            <td>{{ optional($asignacion->user)->num_empleado }}</td>
                             <td>{{ $asignacion->lugar_asignacion }}</td>
                             <td>{{ $asignacion->fecha_de_asignacion }}</td>
                             <td>{{ $asignacion->estado }}</td>
                             <td>{{ $asignacion->notas }}</td>
-                            <td>{{ $asignacion->fecha_de_devolucion }}</td>
-                            <td>{{ $asignacion->observaciones }}</td>
-                            <td>{{ $asignacion->status }}</td>
+                            <td>
+                                    @if($asignacion->status == 2)
+                                       Asignado-Prestado
+                                    @elseif($asignacion->status == 1)
+                                        Asignado
+                                    @else
+                                        {{ $asignacion->estado }}
+                                    @endif
+                                </td>
                             <td>
                                 @if ($asignacion->status == 1 && $asignacion->status_devolucion == 0)
-                                    <form method="POST" action="{{ route('asignacion.devolver', ['asignacionId' => $asignacion->id]) }}">
+                                     <form method="POST" action="{{ route('asignacion.devolver', ['asignacionId' => $asignacion->id]) }}">
                                         @csrf
                                         <button type="submit" class="btn btn-primary">Devolver</button>
                                     </form>

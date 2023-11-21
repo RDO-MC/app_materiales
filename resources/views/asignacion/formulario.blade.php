@@ -93,7 +93,8 @@
                     <label for="estado" class="col-md-4 col-form-label text-md-end">{{ __('Estado') }}</label>
                     <div class="col-md-13">
                         <select id="estado" class="form-control" name="estado" required onchange="mostrarOtroEstado(this)">
-                            <option value="Bien_Mantenido">Bien mantenido</option>
+                        <option ></option>   
+                        <option value="Bien_Mantenido">Bien mantenido</option>
                             <option value="Necesita_Reparacion">Necesita Reparación</option>
                             <option value="Desgastado">Desgastado</option>
                         </select>

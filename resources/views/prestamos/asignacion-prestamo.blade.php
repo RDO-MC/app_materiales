@@ -10,7 +10,19 @@
     <div class="card">
         <div class="card-header">{{ __('') }}</div>
         <div class="card-body">
-            <form method="POST" action="{{ route('administrativo.guardar') }}">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('administrativo.guardarPrestamo') }}">
                 @csrf
 
                 <!-- Campos ocultos para pasar información al controlador -->

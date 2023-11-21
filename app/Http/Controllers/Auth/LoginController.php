@@ -37,6 +37,7 @@ class LoginController extends Controller
             $registro->direccion_ip = $request->ip();
             $registro->exito = true;
             $registro->save();
+            
 
             return redirect()->intended($this->redirectPath());
         } else {
@@ -47,5 +48,23 @@ class LoginController extends Controller
                 ->withInput($request->only('email', 'remember'))
                 ->withErrors(['email' => 'Tu cuenta está desactivada. Contacta al administrador.']);
         }
+ 
+   }
+
+   public function logout(Request $request)
+    {
+        // Registrar la salida del usuario en la tabla "registros"
+        Registro::create([
+            'users_id' => Auth::user()->id,
+            'fecha_hora' => now(), // Hora actual
+            'direccion_ip' => $request->ip(),
+            'exito' => 0, // Marcar con 0 para indicar que es una salida
+        ]);
+
+        // Cerrar sesión
+        Auth::logout();
+
+        // Redireccionar al usuario a la página de inicio de sesión con un mensaje opcional
+        return redirect('/login')->with('success', 'Has cerrado sesión con éxito.');
     }
 }

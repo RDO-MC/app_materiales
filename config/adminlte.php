@@ -323,6 +323,13 @@ return [
             'can' => 'ver-asignados'
             
         ],
+        [
+            'text' => 'PRESTAMOS',
+            'url'  => '/prestamos/materiales',
+            'icon' => '',
+            'can' => 'ver-seguridad'
+            
+        ],
       
         [
             'text'    => 'MATERIALES',
@@ -399,54 +406,53 @@ return [
             ],
         ],
            
+       
             [
-                'text'    => 'RESGUARDOS',
+                'text' => 'REPORTES',
+                'url'  => '/reportes',
+                'icon' => '',
+                'can' => 'ver-reportes'
+            ],
+            [
+                'text'    => 'ACTIVIDADES',
                 'icon'    => '',
-                'can' => 'ver-resguardos',
+                'can' => 'ver-reportes',
             
 
                 'submenu' => [
                     [
-                        'text' => 'PRESTAMO',
-                        'url'  => '#',
-                        'can' => 'ver-resguardos',
+                        'text' => 'REGISTROS',
+                        'url'  => '/actividades/registros',
+                        'can' => 'ver-reportes',
                     ],
                     [
-                        'text' => 'ASIGNACION',
-                        'url'  => '#',
-                        'can' => 'ver-resguardos'
+                        'text' => 'MOVIMIENTOS',
+                        'url'  => '/actividades/actividades',
+                        'can' => 'ver-reportes'
                     ],
                    
                 ],
             ],
        
-        [
-            'text'    => 'REPORTES',
-            'icon'    => '',
-            'can' => 'ver-reportes',
-            
-
-            'submenu' => [
-                [
-                    'text' => 'MENSUAL',
-                    'url'  => '#',
-                    'can' => 'ver-reportes',
-                ],
-                [
-                    'text' => 'ANUAL',
-                    'url'  => '#',
-                    'can' => 'ver-reportes',
-                ],
-                [
-                    'text' => 'GENERAL',
-                    'url'  => 'https://apps.google.com/meet/',
-                    'can' => 'ver-reportes',
-                ],
                
-            ],
+        [
+            'text' => 'VER MATERIALES',
+            'url'  => '/principal',
+            'icon' => '',
+            'can' => 'ver-comun'
+            
         ],
 
-    ],
+        [
+            'text' => 'Acerca de',
+            'url'  => '/acerca',
+            'icon' => '',
+            'can' => 'ver-acerca' // Ajusta esto según tus necesidades
+        ],
+            
+        ],
+
+    
 
     /*
     |--------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Usuarios')
+@section('title', 'USUARIOS')
 
 @section('content_header')
     <h1>Usuarios</h1>
@@ -10,7 +10,7 @@
     <div class="row mt-3">
         <div class="col-md-12">
             <button>
-                <a href="/usuarios/crear" style="text-decoration: none; color: black;">Crear Usuario</a>
+                <a href="/usuarios/crear" style="text-decoration: none; color: black;">NUEVO</a>
             </button>
         </div>
     </div>
@@ -59,12 +59,12 @@
                                     Activo
                                 @endif
                             </td>
-                                <td>
-                                <a href="{{ route('usuarios.editar', $row->id) }}" class="btn btn-warning">
-                        
-                                <i class="fas fa-edit">Editar</i> 
-                            </a>
-
+                                 <td>
+                                    @if ($row->is_active == 1) {{-- Solo mostrar el botón de editar si el usuario está activo --}}
+                                        <a href="{{ route('usuarios.editar', $row->id) }}" class="btn btn-warning">
+                                            <i class="fas fa-edit">Editar</i> 
+                                        </a>
+                                    @endif
                                 </td>
                                 <td>
                                 

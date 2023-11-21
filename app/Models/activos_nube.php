@@ -9,7 +9,10 @@ class activos_nube extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'fecha',
+        'fecha_adquisicion',
+        'fecha_vencimiento',
+        'version',
+      
         'cve_conac',
         'cve_inventario_sefiplan',
         'cve_inventario_interno',

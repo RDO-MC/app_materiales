@@ -7,17 +7,19 @@
 @stop
 
 @section('content')
-    <div class="row mt-3">
-        <div class="col-md-12">
+
+<div class="row mt-3">
+        <div class="col-md-6">
             <button>
-                <a href="/inmuebles/crear" style="text-decoration: none; color: black;">NUEVO</a>
+                <a href="{{ route('inmuebles.crear') }}" style="text-decoration: none; color: black;">NUEVO</a>
             </button>
         </div>
+        <div class="col-md-6">
+        <input type="text" id="search" class="form-control" placeholder="Buscar">
+        </div>
     </div>
-
-    <input type="text" id="search" class="form-control" placeholder="Buscar">
-
-    <div class="row mt-3">
+   
+    <div class="row mt-4">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="bienes_inmuebles-table" >
@@ -69,7 +71,7 @@
                              
                             <td>
                                 @if ($row->status == 0)
-                                    Inactivo
+                                    INACTIVO
                                     @elseif ($row->status == 1)
                                     ACTIVO
                                     @elseif($row->status == 2)
@@ -80,15 +82,15 @@
                             </td>
                            
                                 <td>
-
-                                @if ($row->status != 2 && $row->status != 3)
+                            
+                                @if ($row->status !=0 &&$row->status != 2 && $row->status != 3)
                              <a href="{{ route('inmuebles.editar', $row->id) }}" class="btn btn-warning">
                                 <i class="fas fa-edit">Editar</i> 
                             </a>
                             @endif
                                 </td>
                                 
-                                
+                                 
                                 
                                 <td>
                                 @if ($row->status != 2 && $row->status != 3)

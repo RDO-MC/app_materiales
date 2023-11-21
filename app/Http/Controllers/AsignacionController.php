@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\asignacion;
 use PDF;
 use Illuminate\Support\Facades\Session;
+use App\Models\actividades;
+
 
 class AsignacionController extends Controller
 {
@@ -169,7 +171,7 @@ class AsignacionController extends Controller
         ]);
     
         $user_id = Session::get('user_id');
-        $selectedBienesArray = Session::get('selected_bienes', []); // Recupera los IDs de los bienes seleccionados
+        $selectedBienesArray = Session::get('selected_bienes', []);
     
         if (!$user_id) {
             return back()->withErrors(['No se ha seleccionado un usuario']);
@@ -182,43 +184,55 @@ class AsignacionController extends Controller
         $notas = $request->input('notas');
     
         foreach ($selectedBienesArray as $bienId) {
-            $asignacionData = [
-                'users_id' => $user_id,
-                'fecha_de_asignacion' => $fecha_de_asignacion,
-                'origen_salida' => $origen_salida,
-                'lugar_asignacion' => $lugar_asignacion,
-                'estado' => $estado,
-                'notas' => $notas,
-                'status' => '1', // Estado asignado, ajusta esto según tu sistema
-            ];
-    
-            // Comprueba el tipo de bien seleccionado
+            // Obtén el tipo de bien
             $tipo_bien = $request->input('tipo_bien');
     
-            if ($tipo_bien === 'bienes_inmuebles') {
-                $asignacionData['bienes_inmuebles_id'] = $bienId;
-                $asignacionData['bienes_muebles_id'] = null;
-                $asignacionData['activos_nubes_id'] = null;
+            // Obtén el usuario
+            $usuario = User::find($user_id);
     
-                // Campos específicos para bienes inmuebles
-                $asignacionData['campo_especifico_inmuebles'] = $request->input('campo_especifico_inmuebles');
-            } elseif ($tipo_bien === 'bienes_muebles') {
-                $asignacionData['bienes_inmuebles_id'] = null;
-                $asignacionData['bienes_muebles_id'] = $bienId;
-                $asignacionData['activos_nubes_id'] = null;
+            // Registra la actividad
+            $accion = 'ASIGNACIÓN DE : ' . strtoupper($tipo_bien) . ' ,AL USUARIO : ' .
+                $usuario->nombre . ' ' . $usuario->a_paterno . ' CON #EMPLEADO  : ' . $usuario->num_empleado . ' CAMPUS : ' . $usuario->campus;
     
-                // Campos específicos para bienes muebles
-                $asignacionData['campo_especifico_muebles'] = $request->input('campo_especifico_muebles');
+            // Agrega información específica del bien asignado
+            if ($tipo_bien === 'bienes_muebles') {
+                $cveInventarioInterno = bienes_muebles::find($bienId)->cve_inventario_interno;
+                $accion .= ' ,MATERIAL ASIGNADO Con CVE Inventario Interno: ' . $cveInventarioInterno . ')';
+            } elseif ($tipo_bien === 'bienes_inmuebles') {
+                $numEscrituraPropiedad = bienes_inmuebles::find($bienId)->num_escritura_propiedad;
+                $accion .= '  ,MATERIAL ASIGNADO Con Num. Escritura Propiedad: ' . $numEscrituraPropiedad . ')';
             } elseif ($tipo_bien === 'activos_nubes') {
-                $asignacionData['bienes_inmuebles_id'] = null;
-                $asignacionData['bienes_muebles_id'] = null;
-                $asignacionData['activos_nubes_id'] = $bienId;
-    
-                // Campos específicos para activos nube (ajusta según tus campos)
-                $asignacionData['campo_especifico_activos_nube'] = $request->input('campo_especifico_activos_nube');
+                $cveInventarioInterno = activos_nube::find($bienId)->cve_inventario_interno;
+                $accion .= ' ,MATERIAL ASIGNADO Con CVE Inventario Interno (Activos Nube): ' . $cveInventarioInterno . ')';
             }
     
-            $asignacion = new asignacion($asignacionData);
+            $this->registrarActividad($accion);
+    
+            // Crea un registro de asignación por cada material
+            $asignacion = new asignacion();
+            $asignacion->users_id = $user_id;
+            $asignacion->fecha_de_asignacion = $fecha_de_asignacion;
+            $asignacion->origen_salida = $origen_salida;
+            $asignacion->lugar_asignacion = $lugar_asignacion;
+            $asignacion->estado = $estado;
+            $asignacion->notas = $notas;
+            $asignacion->status = 1;
+    
+            // Asigna el material actual
+            if ($tipo_bien === 'bienes_muebles') {
+                $asignacion->bienes_muebles_id = $bienId;
+                $asignacion->bienes_inmuebles_id = null;
+                $asignacion->activos_nubes_id = null;
+            } elseif ($tipo_bien === 'bienes_inmuebles') {
+                $asignacion->bienes_inmuebles_id = $bienId;
+                $asignacion->bienes_muebles_id = null;
+                $asignacion->activos_nubes_id = null;
+            } elseif ($tipo_bien === 'activos_nubes') {
+                $asignacion->activos_nubes_id = $bienId;
+                $asignacion->bienes_inmuebles_id = null;
+                $asignacion->bienes_muebles_id = null;
+            }
+    
             $asignacion->save();
     
             // Actualiza el estado del bien según su tipo
@@ -241,14 +255,13 @@ class AsignacionController extends Controller
     
         return redirect()->route('asignacion.index')->with('success', 'Asignaciones guardadas exitosamente');
     }
-    
 
-public function devolucion()
+    public function devolucion()
     {
         
-        $asignaciones = asignacion::all();
+        $asignaciones = asignacion::whereIn('status', [1, 2])->get();
        
-        return view('asignacion.devoluciones', compact('asignaciones')); 
+        return view('asignacion.devoluciones', compact('asignaciones'));
     }
 
     public function devolver(Request $request, $asignacionId)
@@ -263,9 +276,9 @@ public function devolucion()
     
         if ($asignacion->bienes_inmuebles_id) {
             $bien = bienes_inmuebles::find($asignacion->bienes_inmuebles_id);
-        } if ($asignacion->bienes_muebles_id) {
+        } elseif ($asignacion->bienes_muebles_id) {
             $bien = bienes_muebles::find($asignacion->bienes_muebles_id);
-        }elseif ($asignacion->activos_nubes_id) {
+        } elseif ($asignacion->activos_nubes_id) {
             $bien = activos_nube::find($asignacion->activos_nubes_id);
         }
     
@@ -276,12 +289,37 @@ public function devolucion()
     
         $asignacion->save();
     
-        // Genera el PDF
-        $pdf = PDF::loadView('asignacion.devpdf', compact('asignacion'));
+        // Registra la actividad de devolución
+        $tipoBien = class_basename($bien);
+        $detalleMaterial = '';
+    
+        if ($tipoBien === 'bienes_muebles') {
+            bienes_muebles::where('id', $bien->id)->update(['status' => 1]);
+            $detalleMaterial = ' (CVE Inventario Interno: ' . $bien->cve_inventario_interno . ')';
+        } elseif ($tipoBien === 'bienes_inmuebles') {
+            bienes_inmuebles::where('id', $bien->id)->update(['status' => 1]);
+            $detalleMaterial = ' (Num. Escritura Propiedad: ' . $bien->num_escritura_propiedad . ')';
+        } elseif ($tipoBien === 'activos_nube') {
+            activos_nube::where('id', $bien->id)->update(['status' => 1]);
+            // Ajusta según los campos de activos_nube
+            $detalleMaterial = ' (CVE Inventario Interno (Activos Nube): ' . $bien->cve_inventario_interno . ')';
+        }
+    
+        $usuario = User::find($asignacion->users_id);
+        $accion = 'Devolucion de Asignacion:' . strtoupper($tipoBien) . ' ,DEVUELVE : ' . $usuario->nombre . ' ' . $usuario->a_paterno . ' ,CON #EMPLEADO : ' . $usuario->num_empleado . ' ,DATOS DE MATERIAL DEVUELTO : ' . $detalleMaterial;
+        $this->registrarActividad($accion);
+    
+        // Aquí es donde debes agregar las variables al método compact
+        $fecha = now();
+        $pdf = PDF::loadView('asignacion.devpdf', compact('asignacion', 'fecha', 'usuario', 'tipoBien'));
+    
+        // Elimina el registro de asignación
+        $asignacion->delete();
     
         // Descarga el PDF
         return $pdf->download('devolucion_asignacion.pdf');
     }
+    
     public function searchAsignaciones(Request $request)
 {
     $query = $request->input('query');
@@ -294,23 +332,34 @@ public function devolucion()
     return view('asignacion.devoluciones', compact('asignaciones', 'query'));
 }
 
-    
-    public function generatePDF(Request $request)
-    {
-        $query = $request->input('query');
-    
-        // Aquí debes realizar la consulta para obtener los datos que deseas incluir en el PDF
-        $asignaciones = Asignacion::whereHas('user', function ($queryBuilder) use ($query) {
-            $queryBuilder->where('num_empleado', 'like', '%' . $query . '%');
-        })->get();
-        
+public function generatePDF(Request $request)
+{
+    $query = $request->input('query');
+
+    // Aquí debes realizar la consulta para obtener los datos que deseas incluir en el PDF
+    $asignaciones = Asignacion::whereHas('user', function ($queryBuilder) use ($query) {
+        $queryBuilder->where('num_empleado', 'like', '%' . $query . '%');
+    })
+    ->where(function ($query) {
+        $query->where('status', 1)
+              ->orWhere('status', 2);
+    })
+    ->get();
+
+    $pdf = PDF::loadView('asignacion.resguardo', compact('asignaciones', 'query'));
+
+    return $pdf->download('resultados_busqueda.pdf');
+}
 
     
-        $pdf = PDF::loadView('asignacion.resguardo', compact('asignaciones', 'query'));
-    
-        return $pdf->download('resultados_busqueda.pdf');
-    }
-    
-
+private function registrarActividad($accion, $detalles = [])
+{
+    actividades::create([
+        'users_id' => auth()->user()->id,
+        'actividad' => $accion,
+        'fecha_hora' => now(),
+        // Puedes agregar más información si es necesario
+    ]);
+}
 } 
 

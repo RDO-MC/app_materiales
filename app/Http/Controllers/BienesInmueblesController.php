@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
-
 class BienesInmueblesController extends Controller
 {
     /**
@@ -20,6 +19,7 @@ class BienesInmueblesController extends Controller
     public function index()
     {
         $bienes_inmuebles = bienes_inmuebles::all();
+        $bienes_inmuebles = bienes_inmuebles::orderByRaw("FIELD(status, 1, 2, 3, 0)")->get();
         return view('inmuebles.principal', compact('bienes_inmuebles'));
     }
 
@@ -44,8 +44,16 @@ public function store(Request $request)
 {
    
     $request->validate([
-        // Otras validaciones...
-
+        'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+        'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+        'num_escritura_propiedad' => 'required|numeric',
+        'ins_reg_pub_prop' => 'alpha|required',
+        'estado_valuado' => 'alpha|required',
+        'registro_contable' => 'alpha|required',
+        'num_cedula_catastral' => 'numeric|required',
+        'val_catastral' => 'numeric|regex:/^\d+(\.\d{1,2})?$/|required',
+        'val_comercial' => 'numeric|regex:/^\d+(\.\d{1,2})?$/|required',
+        'estado'=>'required',
         'img_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
@@ -71,6 +79,9 @@ public function store(Request $request)
 
         // Guarda el bien inmueble en la base de datos
         $bienes_inmuebles->save();
+        $accion = 'CREÓ UN NUEVO BIEN INMUEBLES  CON num_escritura_propiedad :';
+        $detalles = ['num_escritura_propiedad' => $bienes_inmuebles->num_escritura_propiedad];
+        $this->registrarActividad($accion, $detalles);
 
         // Obtiene el ID del bien inmueble después de guardarlo
         $bienInmuebleId = $bienes_inmuebles->id;
@@ -119,6 +130,21 @@ public function store(Request $request)
 {
     $bienes_inmuebles = Bienes_Inmuebles::find($id);
 
+    
+    $request->validate([
+        'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+        'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+        'num_escritura_propiedad' => 'required|numeric',
+        'ins_reg_pub_prop' => 'alpha|required',
+        'estado_valuado' => 'alpha|required',
+        'registro_contable' => 'alpha|required',
+        'num_cedula_catastral' => 'numeric|required',
+        'val_catastral' => 'numeric|regex:/^\d+(\.\d{1,2})?$/|required',
+        'val_comercial' => 'numeric|regex:/^\d+(\.\d{1,2})?$/|required',
+        'estado'=>'required',
+        
+    ]);
+
     $bienes_inmuebles->update([
         'nombre' => $request->input('nombre'),
         'descripcion' => $request->input('descripcion'),
@@ -135,27 +161,43 @@ public function store(Request $request)
         
     ]);
   
-     
+    $accion = 'EDITO UN BIEN INMUEBLES CON num_escritura_propiedad:';
+    $detalles = ['num_escritura_propiedad' => $bienes_inmuebles->num_escritura_propiedad];
+    $this->registrarActividad($accion, $detalles);
 
     return redirect()->route('inmuebles.principal')
         ->with('success', 'Inmueble actualizado exitosamente');
 }
 
-    public function disableUser(Request $request, $id)
-    {
-        $bienes_inmuebles = bienes_inmuebles::find($id);
-        
-        // Cambiar el estado del bien inmueble
-        $bienes_inmuebles->status = ($bienes_inmuebles->status == 1) ? 0 : 1;
-        
-        $nota = $request->input('nota'); // Cambia $statusNote a $nota
-        $bienes_inmuebles->nota = $nota; // Asigna la nota
-        
-        $bienes_inmuebles->save();
-        
-        return redirect()->route('inmuebles.principal')
-            ->with('success', 'Estado del bien inmueble fue actualizado correctamente');
+public function disableUser(Request $request, $id)
+{
+    $bienes_inmuebles = bienes_inmuebles::find($id);
+
+    // Cambiar el estado del bien inmueble
+    $bienes_inmuebles->status = ($bienes_inmuebles->status == 1) ? 0 : 1;
+
+    // Obtener la nota del formulario si está presente
+    $nota = $request->input('nota', null);
+
+    // Asignar la nota si está presente
+    if ($nota !== null) {
+        $bienes_inmuebles->nota = $nota;
     }
+
+    $bienes_inmuebles->save();
+
+    // Acción para registrar
+    $accion = ($bienes_inmuebles->status == 0) ? 'DIO DE BAJA BIEN INMUEBLES CON num_escritura_propiedad:' : 'HABILITÓ INMUEBLES CON num_escritura_propiedad:';
+
+    // Detalles para registrar
+    $detalles = ['num_escritura_propiedad' => $bienes_inmuebles->num_escritura_propiedad];
+
+    $this->registrarActividad($accion, $detalles);
+
+    return redirect()->route('inmuebles.principal')
+        ->with('success', 'Estado del bien inmueble fue actualizado correctamente');
+}
+
     public function getStatusText($status)
     {
         switch ($status) {
@@ -170,6 +212,15 @@ public function store(Request $request)
             default:
                 return 'Desconocido';
         }
+    }
+    private function registrarActividad($accion, $detalles = [])
+    {
+        actividades::create([
+            'users_id' => auth()->user()->id,
+            'actividad' => $accion . ' ' . $detalles['num_escritura_propiedad'],
+            'fecha_hora' => now(),
+            // Puedes agregar más información si es necesario
+        ]);
     }
 }    
    

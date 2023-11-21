@@ -45,4 +45,9 @@ class asignacion extends Model
     return $this->belongsTo(User::class, 'users_id');
 }
 
+
+public function prestamos()
+{
+    return $this->hasMany(Prestamos::class, 'bienes_muebles_id', 'bienes_inmuebles_id', 'activos_nubes_id');
+}
 }

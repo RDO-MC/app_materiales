@@ -12,10 +12,14 @@ class registro extends Model
     
     protected $fillable = [
        
-        'user_id',
+        'users_id',
         'fecha_hora',
         'direccion_ip',
         'exito',
       
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 }

@@ -12,16 +12,14 @@
     $bienesInmueblesSeleccionados = null; // Asigna un valor apropiado aquí si es necesario
 @endphp
 
-
-<form method="POST" action="{{ route('asignacion.proceso') }}">
+<form method="POST" action="{{ route('asignacion.proceso') }}" onsubmit="return validateSelection()">
     @csrf
-    
     <input type="hidden" name="user_id" value="{{ $user_id }}">
-   
-    <!-- Agrega un campo oculto para almacenar los bienes inmuebles seleccionados -->
-    <input type="hidden" name="selected_bienes" id="selectedBienes" value="">
+    <!-- Cambia el tipo del campo oculto a text -->
+    <input type="text" name="selected_bienes" id="selectedBienes" value="" style="display: none">
     <button type="submit" class="btn btn-primary">Continuar</button>
 </form>
+
 
 <input type="text" id="search" class="form-control" placeholder="Buscar">
 
@@ -116,6 +114,17 @@
             });
         });
     });
+</script>
+<script>
+    function validateSelection() {
+        // Check if there are any selected bienes inmuebles
+        if (selectedBienes.length === 0) {
+            alert('Por favor, selecciona al menos un bien inmueble antes de continuar.');
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+    }
 </script>
 
 <script>

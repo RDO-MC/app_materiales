@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
+use App\Models\actividades;
 
 class BienesMueblesController extends Controller
 {
     public function index()
     {
         $bienes_muebles = bienes_muebles::all();
+        $bienes_muebles = bienes_muebles::orderByRaw("FIELD(status, 1, 2, 3, 0)")->get();
         return view('muebles.principal', compact('bienes_muebles'));
     }
 
@@ -36,15 +38,15 @@ class BienesMueblesController extends Controller
     {
         $request->validate([
             'fecha' => 'required',
-            'cve_conac' => 'required',
-            'cve_inventario_sefiplan' => 'required',
-            'cve_inventario_interno' => 'required',
-            'nombre' => 'required',
-            'descripcion' => 'required',
-            'factura' => 'required',
-            'num_serie' => 'required',
-            'importe' => 'required',
-            'partida' => 'required',
+            'cve_conac' => 'required|numeric',
+            'cve_inventario_sefiplan' => 'required|regex:/^[A-Z\/]+$/',
+            'cve_inventario_interno' => 'required|regex:/^[A-Z0-9]+$/|unique:bienes_muebles',
+            'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'factura' => 'required|regex:/^[A-Za-z0-9\-]+$/',
+            'num_serie' => 'required|regex:/^[A-Z\/]+$/',
+            'importe' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'partida' => 'required|numeric',
             'identificacion_del_bien' => 'required',
             'marca' => 'required',
             'modelo' => 'required',
@@ -81,6 +83,9 @@ class BienesMueblesController extends Controller
             $bienes_muebles->status = '1';
 
             $bienes_muebles->save();
+            $accion = 'CREÓ UN NUEVO BIEN MUEBLES  CON cve_inventario_interno :';
+            $detalles = ['cve_inventario_interno' => $bienes_muebles->cve_inventario_interno];
+            $this->registrarActividad($accion, $detalles);
 
         // Obtiene el ID del bien inmueble después de guardarlo
         $bienMuebleId = $bienes_muebles->id;
@@ -112,18 +117,20 @@ class BienesMueblesController extends Controller
     public function update(Request $request, bienes_muebles $bienes_muebles)
     {
         $data = $request->validate([
-
-
             'fecha' => 'required',
-            'cve_conac' => 'required',
-            'cve_inventario_sefiplan' => 'required',
-            'cve_inventario_interno' => 'required',
-            'nombre' => 'required',
-            'descripcion' => 'required',
-            'factura' => 'required',
-            'num_serie' => 'required',
-            'importe' => 'required',
-            'partida' => 'required',
+            'cve_conac' => 'required|numeric',
+            'cve_inventario_sefiplan' => 'required|regex:/^[A-Z\/]+$/',
+            'cve_inventario_interno' => [
+                'required',
+                'regex:/^[A-Z0-9]+$/',
+                Rule::unique('bienes_muebles')->ignore($bienes_muebles->id),
+            ],
+            'nombre' =>  ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'descripcion' =>  ['required', 'string', 'max:150', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'factura' => 'required|regex:/^[A-Za-z0-9\-]+$/',
+            'num_serie' => 'required|regex:/^[A-Z\/]+$/',
+            'importe' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'partida' => 'required|numeric',
             'identificacion_del_bien' => 'required',
             'marca' => 'required',
             'modelo' => 'required',
@@ -134,17 +141,35 @@ class BienesMueblesController extends Controller
 
     
         $bienes_muebles->update($data);
+        $accion = 'EDITO UN BIEN MUEBLES CON cve_inventario_interno:';
+        $detalles = ['cve_inventario_interno' => $bienes_muebles->cve_inventario_interno];
+        $this->registrarActividad($accion, $detalles);
     
         return redirect()->route('muebles.principal');
     }
     
-
     public function disablemuebles($id)
     {
         $bienes_muebles = bienes_muebles::find($id);
         $bienes_muebles->status = ($bienes_muebles->status == 1) ? 0 : 1;
         $bienes_muebles->save();
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Acción para registrar
+        $accion = ($bienes_muebles->status == 0) ? 'DIO DE BAJA BIEN MUEBLES CON cve_inventario_interno :' : 'HABILITÓ MUEBLES CON cve_inventario_interno :';
+        // Detalles para registrar
+        $detalles = ['cve_inventario_interno' => $bienes_muebles->cve_inventario_interno];
+        $this->registrarActividad($accion, $detalles);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('muebles.principal')->with('success', 'Estado del bien mueble actualizado correctamente');
+    }
+    private function registrarActividad($accion, $detalles = [])
+    {
+        actividades::create([
+            'users_id' => auth()->user()->id,
+            'actividad' => $accion . ' ' . $detalles['cve_inventario_interno'],
+            'fecha_hora' => now(),
+            // Puedes agregar más información si es necesario
+        ]);
     }
 }

@@ -26,7 +26,7 @@
             <th>ORIGEN DE SALIDA</th>
             <th>LUGAR DE ASIGNACION</th>
             <th>ESTADO</th>
-            <th>NOTAS</th>
+            <th>PRESTADO A</th>
             <th>ACCION</th>
         </tr>
     </thead>
@@ -73,17 +73,55 @@
                 <td>{{ $asignacion->fecha_de_asignacion }}</td>
                 <td>{{ $asignacion->origen_salida }}</td>
                 <td>{{ $asignacion->lugar_asignacion }}</td>
-                <td>{{ $asignacion->estado }}</td>
-                <td>{{ $asignacion->notas }}</td>
+                            <td>
+                @if ($asignacion->status == 1)
+                    {{ $asignacion->estado }}
+                @elseif ($asignacion->status == 2)
+                    Prestado
+                @endif
+            </td>
+            <td>
+                @if ($asignacion->status == 2 && $asignacion->prestamos->isNotEmpty())
+                    {{-- Debug statement --}}
+                    {{ dd($asignacion->prestamos) }}
+                    {{ $asignacion->prestamos->first()->user->num_empleado }}
+                    {{ $asignacion->prestamos->first()->user->nombre}}
+                    {{ $asignacion->prestamos->first()->user->a_paterno}}
+                    {{ $asignacion->prestamos->first()->user->a_materno}}
+                @else
+                    N/A
+                @endif
+            </td>
+
+
+
                 <td>
                     @if ($asignacion->status == 1)
-                        <a href="{{ route('prestamos.asignacion-prestamo', ['id' => $asignacion->id]) }}" class="btn btn-primary">Prestar</a>
+                        @if ($asignacion->bienes_muebles_id)
+                            <a href="{{ route('prestamos.asignacion-prestamo', ['id' => $asignacion->id]) }}" class="btn btn-primary btn-block">Prestar</a>
+                        @elseif ($asignacion->bienes_inmuebles_id)
+                            {{-- Agrega aquí la lógica para bienes inmuebles si es necesario --}}
+                            <a href="{{ route('prestamos.asignacion-prestamo', ['id' => $asignacion->id]) }}" class="btn btn-primary btn-block">Prestar </a>
+                        @elseif ($asignacion->activos_nubes_id)
+                            {{-- No muestra el botón para activos de nubes --}}
+                        @endif
+                    @elseif ($asignacion->status == 2)
+                       <!-- Botón y formulario para devolver -->
+                       <button class="btn btn-success btn-block" onclick="confirmAction({{ $asignacion->id }})">
+                            Devolver
+                        </button>
+                        <form id="disable-form-{{ $asignacion->id }}" action="{{ route('administrativo.realizarDevolucion', ['id' => $asignacion->id]) }}" method="POST" style="display: none;">
+                            @method("PUT")
+                            @csrf
+                            <input type="hidden" name="observaciones" id="observaciones_{{ $asignacion->id }}" value="">
+                        </form>
                     @endif
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+
 @stop
 
 @section('js')
@@ -108,5 +146,18 @@ $(document).ready(function() {
         });
     });
 });
+
+function confirmAction(id) {
+    console.log('Confirm Action executed with id:', id);
+    var action = 'devolver';
+    if (confirm('¿Estás seguro de ' + action + ' este material?')) {
+        var observaciones = prompt('Por favor, ingresa las observaciones:');
+        if (observaciones !== null) {
+            console.log('Observaciones:', observaciones);
+            document.getElementById('observaciones_' + id).value = observaciones;
+            document.getElementById('disable-form-' + id).submit();
+        }
+    }
+}
 </script>
 @stop

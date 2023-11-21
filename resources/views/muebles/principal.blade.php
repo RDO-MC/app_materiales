@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Bienes Muebles')
+@section('title', 'BIENES MUEBLES')
 
 @section('content_header')
- <h1>Bienes Muebles</h1>
+ <h1>BIENES MUEBLES</h1>
 @stop
 
 @section('content')
@@ -92,7 +92,8 @@
                             <img src="{{ $mueble->qr }}" alt="Imagen del qr" style="max-width: 100px; max-height: 100px;">
                             </td>
                             <td>
-                            @if ($mueble->status != 2 && $mueble->status != 3)
+                         
+                            @if ($mueble->status !=0 && $mueble->status != 2 && $mueble->status != 3)
                                     <a href="{{ route('muebles.editar', $mueble->id) }}" class="btn btn-warning">
                                         <i class="fas fa-edit">Editar</i> 
                                     </a>
@@ -101,7 +102,7 @@
                             <td>
                             @if ($mueble->status != 2 && $mueble->status != 3)
                                     <form id="disable-form-{{ $mueble->id }}" method="POST" action="{{ route('muebles.disable', $mueble->id) }}">
-                                        @method("PUT")
+                                         @method("PUT")
                                         @csrf
                                         <button class="btn {{ $mueble->status ? 'btn-danger' : 'btn-success' }}" onclick="return confirmAction({{ $mueble->id }})">
                                             <i class="fas {{ $mueble->status ? 'fa-arrow-down' : 'fa-arrow-up' }}" style="font-size: 10px;">{{ $mueble->status ? 'Baja' : 'Alta' }}</i>

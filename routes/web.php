@@ -9,6 +9,10 @@ use App\Http\Controllers\ActivosNubeController;
 use App\Http\Controllers\PrestamosController;
 use App\Http\Controllers\MaterialesController;
 use App\Http\Controllers\AdministrativoController;
+use App\Http\Controllers\ReportesController;
+use App\Http\Controllers\ActividadesController;
+use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\AcercaController;
 
 
 
@@ -20,7 +24,7 @@ Route::get('/', function () {
 Auth::routes();
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+    Route::get('/acerca', [AcercaController::class, 'index'])->name('acerca');
     Route::get('/roles', 'RoleController@selectRole')->name('roles');
 
 //usuarios
@@ -42,6 +46,7 @@ Route::group(['middleware' => ['role:superadmin']], function() {
     Route::get('/activos/{activos_nube}/editar', [ActivosNubeController::class, 'edit'])->name('activos.editar');
     Route::put('/activos/{activos_nube}', [ActivosNubeController::class, 'update'])->name('activos.update');
     Route::put('/activos/{id}/disable', [ActivosNubeController::class, 'disable'])->name('activos.disable');
+    Route::get('/activos/qr', [ActivosNubeController::class, 'imprimirQR'])->name('activos.qr');
 });
 
 Route::group(['middleware' => ['role:superadmin']], function() {
@@ -83,27 +88,43 @@ Route::group(['middleware' => ['role:superadmin']], function() {
     Route::post('/asignacion/devoluciones/search', [AsignacionController::class, 'searchAsignaciones'])->name('asignacion.search');
     
     Route::get('/asignacion/pdf', [AsignacionController::class, 'generatePDF'])->name('asignacion.pdf');
-
+  
 });
-
+Route::group(['middleware' => ['role:superadmin']], function() {
+    //reportes
+    Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
+    Route::post('/reportes/generar', [ReportesController::class, 'generar'])->name('reportes.generar');
+    Route::post('/generar-pdf', [ReportesController::class, 'generarPDF'])->name('generar-pdf');
+});
 Route::group(['middleware' => ['auth']], function () {
+    //prestamos
     Route::get('/prestamos', [PrestamosController::class, 'index'])->name('prestamos.principal');
     Route::get('/prestamos/crear', [PrestamosController::class, 'create'])->name('prestamos.crear');
     Route::post('/prestamos', [PrestamosController::class, 'store'])->name('prestamos.store');
     Route::post('/prestamos/devolver/{prestamoId}', [PrestamosController::class, 'devolver'])->name('prestamos.devolver');
+    Route::get('/prestamos/devoluciones', [PrestamosController::class, 'devolucion'])->name('prestamos.devoluciones')->middleware('auth');
+    Route::post('/prestamos/devoluciones/search', [PrestamosController::class, 'search'])->name('prestamos.search');
+    Route::get('/prestamos/pdf', [PrestamosController::class, 'generatePDF'])->name('prestamos.pdf');
+    
 })->middleware('role:superadmin|seguridad');
 
+Route::group(['middleware' => ['role:superadmin']], function() {
+//actividades y registros
+    Route::get('/actividades/registros', [RegistroController::class, 'index'])->name('actividades.registros');
+    Route::get('/actividades/actividades', [ActividadesController::class, 'index'])->name('actividades.actividades');
+
+});
 
 Route::group(['middleware' => ['role:administrativo']], function() {
     Route::get('prestamos/materiales', [AdministrativoController::class, 'materialesAsignados'])->name('prestamos.materiales');
     Route::get('/prestamos/asignacion-prestamo/{id}', [AdministrativoController::class, 'create'])->name('prestamos.asignacion-prestamo');
     Route::get('/buscar-usuario/{numeroEmpleado}', [AdministrativoController::class, 'buscarUsuario'])->name('buscar-usuario');
-    Route::post('/administrativo/guardar', [AdministrativoController::class, 'guardarPrestamo'])->name('administrativo.guardar');
+    Route::post('/administrativo/guardar', [AdministrativoController::class, 'guardarPrestamo'])->name('administrativo.guardarPrestamo');
+    Route::put('/administrativo/realizarDevolucion/{id}', [AdministrativoController::class, 'realizarDevolucion'])->name('administrativo.realizarDevolucion');
 
 });
 
+
 Route::group(['middleware' => ['role:comun']], function() {
     Route::get('principal', [MaterialesController::class, 'materialesAsignados'])->name('principal');
-   
-
 });

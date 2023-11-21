@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
-
+use App\Models\actividades;///////////////////////////////////
 class UserController extends Controller
 {
     public function index()
@@ -63,6 +63,9 @@ class UserController extends Controller
         ]);
     
         $user->assignRole($request->role);
+        $accion = 'CREÓ UN NUEVO USUARIO CON NUMERO DE EMPLEDO:';
+        $detalles = ['num_empleado' => $num_empleado];
+        $this->registrarActividad($accion, $detalles);
     
         return redirect()->route('usuarios.principal')
             ->with('success', 'Usuario creado exitosamente');
@@ -84,8 +87,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::find($id);
-
-        $this->validate($request, [
+    
+        $rules = [
             'nombre' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'a_paterno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'a_materno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
@@ -95,22 +98,36 @@ class UserController extends Controller
             'campus' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/',
                         Rule::unique('users', 'email')->ignore($user->id)],
-        ]);
-
+            'password' => 'nullable|string|min:8|confirmed',
+        ];
+    
+        $this->validate($request, $rules);
+    
         $user->update([
             'nombre' => $request->input('nombre'),
             'a_paterno' => $request->input('a_paterno'),
             'a_materno' => $request->input('a_materno'),
             'num_empleado' => $request->input('num_empleado'),
             'telefono' => $request->input('telefono'),
-            'cargo' => $request->input('cargo'),
+            'cargo' => $request->input('cargo'),  
             'campus' => $request->input('campus'),
             'email' => $request->input('email'),
         ]);
-
+    
+        if ($request->has('change_password')) {
+            $this->validate($request, [
+                'password' => 'nullable|string|min:8|confirmed',
+            ]);
+    
+            $user->update(['password' => bcrypt($request->input('password'))]);
+        }
+        $accion = 'EDITO USUARIO CON NUMERO DE EMPLEDO:';
+        $detalles = ['num_empleado' => $user->num_empleado];
+        $this->registrarActividad($accion, $detalles);
         return redirect()->route('usuarios.principal')
             ->with('success', 'Usuario actualizado exitosamente');
     }
+    
 
     public function disableUser($id)
     {
@@ -120,8 +137,24 @@ class UserController extends Controller
         $user->is_active = ($user->is_active == 1) ? 0 : 1;
         
         $user->save();
+        // Acción para registrar
+        $accion = ($user->is_active == 0) ? 'DIO DE BAJA USUARIO CON num_empleado :' : 'HABILITÓ USUARIO CON num_empleado :';
+        // Detalles para registrar
+        $detalles = ['num_empleado' => $user->num_empleado];
+    
+        // Registra la actividad
+        $this->registrarActividad($accion, $detalles);
     
         return redirect()->route('usuarios.principal')
             ->with('success', 'Estado del usuario actualizado correctamente');
     }
+    private function registrarActividad($accion, $detalles = [])
+{
+    actividades::create([
+        'users_id' => auth()->user()->id,
+        'actividad' => $accion . ' ' . $detalles['num_empleado'],
+        'fecha_hora' => now(),
+        // Puedes agregar más información si es necesario
+    ]);
+}
 }

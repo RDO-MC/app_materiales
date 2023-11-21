@@ -3,10 +3,14 @@
 @section('title', 'ACTIVOS NUBE')
 
 @section('content_header')
- <h1>ACTIVOS NUBE </h1>
+<div class="d-flex justify-content-between align-items-center">
+        <h1>ACTIVOS NUBE </h1>
+        <a href="{{ route('activos.qr') }}" class="btn btn-info">Imprimir QR</a>
+    </div>
 @stop
 
 @section('content')
+
     <div class="row mt-3">
         <div class="col-md-6">
             <button>
@@ -14,14 +18,15 @@
             </button>
         </div>
         <div class="col-md-6">
-            <input type="text" id="search" class="form-control" placeholder="Buscar">
+        <input type="text" id="search" class="form-control" placeholder="Buscar">
         </div>
     </div>
+   
     
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="activos_nube">
+                <table class="table table-bordered table-hover" id="activos">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -126,11 +131,11 @@
 
 @section('js')
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $("#search").on("input", function() {
         var searchTerm = $(this).val().toLowerCase();
 
-        $("#muebles-table tbody tr").each(function() {
+        $("#activos tbody tr").each(function() {
             var activos = $(this);
 
             // Concatenamos todos los campos en un solo texto para buscar
@@ -144,8 +149,6 @@
         });
     });
 });
-
-
 </script>
 
 @stop

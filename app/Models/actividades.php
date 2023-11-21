@@ -5,23 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class actividades extends Model
+class Actividades extends Model
 {
-    
-   
     use HasFactory;
-    public $timestamps = false;
-    
+
     protected $fillable = [
-       
-        'registros_id',
-        'actividad',
-        'fecha_hora',
-        
-      
+        'users_id', 'actividad', 'fecha_hora',
     ];
-    public function actividades()
+
+    // Relación con el modelo User
+    public function user()
     {
-        return $this->hasMany(Actividades::class, 'registros_id');
+        return $this->belongsTo(User::class, 'users_id');
     }
 }

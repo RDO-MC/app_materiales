@@ -14,7 +14,11 @@ class RegistroController extends Controller
      */
     public function index()
     {
-        //
+            // Obtener todos los registros de la tabla "registro"
+    $registros = registro::all();
+    
+    // Pasar los registros a la vista 'registros.principal'
+    return view('actividades.registros', compact('registros'));
     }
 
     /**
