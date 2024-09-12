@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;   
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
@@ -12,6 +12,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        $users = User::orderByRaw("FIELD(is_Active, 1, 0)")->get();
         return view('usuarios.principal', compact('users'));
     }
 
@@ -28,9 +29,9 @@ class UserController extends Controller
             'nombre' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             'a_paterno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             'a_materno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
-            'num_empleado' => ['required', 'numeric', Rule::unique('users', 'num_empleado')],
+            'num_empleado' => ['required', 'string', Rule::unique('users', 'num_empleado'), 'regex:/^[A-Z0-9]+$/'],
             'telefono' => ['required', 'string', 'regex:/^[0-9]+$/', 'size:10'],
-            'cargo' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
+            'cargo' => ['required', 'string', 'max:200', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             'campus' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+/'],
             'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'alpha_num', 'min:8'],
@@ -42,7 +43,7 @@ class UserController extends Controller
         $a_paterno = ucwords(strtolower(trim($request->input('a_paterno'))));
         $a_materno = ucwords(strtolower(trim($request->input('a_materno'))));
         $telefono = preg_replace('/[^0-9]/', '', $request->input('telefono'));
-        $num_empleado = preg_replace('/[^0-9]/', '', $request->input('num_empleado'));
+        $num_empleado = preg_replace('/[^A-Z0-9]/', '', strtoupper($request->input('num_empleado')));
         $cargo = ucwords(strtolower(trim($request->input('cargo'))));
         $campus = ucwords(strtolower(trim($request->input('campus'))));
         $email = strtolower(trim($request->input('email')));
@@ -92,7 +93,7 @@ class UserController extends Controller
             'nombre' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'a_paterno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'a_materno' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
-            'num_empleado' => ['required', 'numeric', Rule::unique('users', 'num_empleado')->ignore($user->id)],
+            'num_empleado' => ['required', 'string', Rule::unique('users', 'num_empleado')->ignore($user->id), 'regex:/^[A-Z0-9]+$/'],
             'telefono' => ['required', 'string', 'regex:/^[0-9]+$/', 'size:10'],
             'cargo' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],
             'campus' => ['required', 'string', 'max:30', 'regex:/^[A-Za-záéíóúÁÉÍÓÚ\s]+$/'],

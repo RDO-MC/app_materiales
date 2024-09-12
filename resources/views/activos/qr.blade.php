@@ -1,55 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activos PDF</title>
+    <title>QR de Activos Nube </title>
     <style>
+        /* Estilos para el PDF */
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
+ 
+        .page {
+            width: 100%;
+            box-sizing: border-box;
+            page-break-after: always;
+            clear: both;
+            padding: 10px; /* Espaciado alrededor de la página */
         }
 
         .row {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px; /* Aumenta el espacio entre las filas */
             display: flex;
+            flex-wrap: wrap; /* Permitir que los elementos se envuelvan a la siguiente línea */
             justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
         }
 
-        .activo-container {
-            width: 20%; /* Ajusta el ancho según la cantidad de columnas deseadas */
-            text-align: center; /* Centra el contenido */
-            margin-bottom: 20px;
+        .bienes_muebles-container {
+            width: calc(24% - 1cm); /* Ancho ajustado con espacio adicional de 1 cm */
+            text-align: center;
+            margin-bottom: 20px; /* Aumenta el espacio entre los códigos QR */
+            margin-right: 1cm; /* Margen derecho de 1 cm para el espacio horizontal */
+            box-sizing: border-box;
+            float: left;
         }
 
         .qr-code {
             max-width: 100%;
-            height: auto; /* Ajusta el tamaño proporcionalmente */
-            margin-bottom: 10px;
+            height: auto;
+            margin-bottom: 10px; /* Aumenta el espacio entre la imagen y el texto */
         }
 
         .cve-inventario {
-            font-size: 16px;
+            font-size: 12px;
+        }
+
+        .clear {
+            width: 100%; 
+            box-sizing: border-box;
+            clear: both;
         }
     </style>
 </head>
 <body>
-    <h1>Lista de Activos</h1>
-
-    <div class="row">
-        @foreach($activos_nube as $activo)
-            <div class="activo-container">
-                <img class="qr-code" src="{{ $activo->qr }}" alt="Código QR">
-                <div class="cve-inventario">
-                    <p>CVE Inventario Interno: {{ $activo->cve_inventario_interno }}</p>
+    <?php $contador = 0; ?>
+    <div class="page">
+        <div class="row">
+            @foreach($activos_nube as $index => $activos)
+                <div class="activos_nube-container">
+                    <img class="qr-code" src="{{ $activos->qr }}" alt="Código QR">
+                    <div class="cve-inventario">
+                        <p>CVE Inventario Interno: {{ $activos->cve_inventario_interno }}</p>
+                    </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+                <?php $contador++; ?>
+                @if ($contador % 3 == 0)
+                    <div class="clear"></div> <!-- Salto de línea después de cada tercer código QR -->
+                @endif
+                @if ($contador % 12 == 0)
+                    </div> <!-- Cerrar la fila -->
+                    </div> <!-- Cerrar la página -->
+                    <div class="page">
+                    <div class="row">
+                @endif
+            @endforeach
+        </div> <!-- Cerrar la fila -->
+    </div> <!-- Cerrar la página -->
 </body>
 </html>

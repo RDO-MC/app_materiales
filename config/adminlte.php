@@ -31,8 +31,8 @@ return [
     */
 
     'use_ico_only' => false,
-    'use_full_favicon' => false,
-
+    'use_full_favicon' => '/favicon.ico',
+    
     /*
     |--------------------------------------------------------------------------
     | Google Fonts
@@ -84,9 +84,9 @@ return [
     */
 
     'auth_logo' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/circulo.png',
             'alt' => 'Auth Logo',
             'class' => '',
             'width' => 50,
@@ -109,7 +109,7 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/circulo.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
@@ -129,7 +129,7 @@ return [
     |
     */
 
-    'usermenu_enabled' => true,
+    'usermenu_enabled' => false,
     'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
@@ -192,9 +192,10 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-dark-green elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-white bg-dark',
+    
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -238,7 +239,7 @@ return [
     'right_sidebar_slide' => true,
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
-    'right_sidebar_scrollbar_auto_hide' => 'l',
+    'right_sidebar_scrollbar_auto_hide' => '0',
 
     /*
     |--------------------------------------------------------------------------
@@ -308,148 +309,183 @@ return [
        
         ['header' => 'INICIO'],
         
-      
-        [
-            'text' => 'USUARIOS',
-            'url'  => '/usuarios',
-            'icon' => '',
-            'can' => 'ver-usuarios'
-            
-        ],  
-         [
-            'text' => 'ASIGNADOS',
-            'url'  => '/prestamos/materiales',
-            'icon' => '',
-            'can' => 'ver-asignados'
+       //superadmin
+       [
+        'text' => 'USUARIOS',
+        'url'  => '/usuarios',
+        'icon' => '',
+        'can' => 'ver-usuarios'
+        
+    ],  
+
+    
+  
+    [
+        'text'    => 'MATERIALES',
+        'icon'    => '',
+        'can' => 'ver-materiales',
+        
+        
+        'submenu' => [
+            [
+                'text' => 'ACTIVOS NUBE',
+                'url'  => '/activos',
+                'can' => 'ver-materiales'
+               
+
+            ],
+            [
+                'text' => 'BIENES MUEBLES',
+                'url'  => '/muebles',
+                'can' => 'ver-materiales',
+              
+
+
+            ],
+            [
+                'text' => 'BIENES INMUEBLES',
+                'url'  => '/inmuebles',
+                'can' => 'ver-materiales',
+              
+
+            ],
+           
+        ],
+    ],
+    [
+        'text'    => 'PRESTAMOS',
+        'icon'    => '',
+        'can' => 'ver-prestamos',
+        
+
+        'submenu' => [
+            [
+                'text' => 'PRESTAMO',
+                'url'  => '/prestamos',
+                'can' => 'ver-prestamos',
+                
+            ],
+            [
+                'text' => 'DEVOLUCION',
+                'url'  => '/prestamos/devoluciones',
+                'can' => 'ver-prestamos',
+            ],
+           
+           
+        ],
+    ],
+    [
+        'text'    => 'ASIGNACION',
+        'icon'    => '',
+        'can' => 'ver-asignacion',
+       
+
+        'submenu' => [
+            [
+                'text' => 'ASIGNAR',
+                'url'  => '/asignacion',
+                'can' => 'ver-asignacion',
+            ],
+            [
+                'text' => 'DEVOLUCION ',
+                'url'  => '/asignacion/devoluciones',
+                'can' => 'ver-asignacion',
+            ],
             
         ],
+    ],
+       
+   
         [
-            'text' => 'PRESTAMOS',
-            'url'  => '/prestamos/materiales',
+            'text' => 'REPORTES',
+            'url'  => '/reportes',
             'icon' => '',
-            'can' => 'ver-seguridad'
-            
+            'can' => 'ver-reportes'
         ],
-      
         [
-            'text'    => 'MATERIALES',
+            'text'    => 'ACTIVIDADES',
             'icon'    => '',
-            'can' => 'ver-materiales',
-            
-            
+            'can' => 'ver-reportes',
+        
+
             'submenu' => [
                 [
-                    'text' => 'ACTIVOS NUBE',
-                    'url'  => '/activos',
-                    'can' => 'ver-materiales'
-                   
-
+                    'text' => 'REGISTROS',
+                    'url'  => '/actividades/registros',
+                    'can' => 'ver-reportes',
                 ],
                 [
-                    'text' => 'BIENES MUEBLES',
-                    'url'  => '/muebles',
-                    'can' => 'ver-materiales',
-                  
-
-
-                ],
-                [
-                    'text' => 'BIENES INMUEBLES',
-                    'url'  => '/inmuebles',
-                    'can' => 'ver-materiales',
-                  
-
+                    'text' => 'MOVIMIENTOS',
+                    'url'  => '/actividades/actividades',
+                    'can' => 'ver-reportes'
                 ],
                
             ],
         ],
+        //rol administrativo
         [
-            'text'    => 'PRESTAMOS',
+            'text'    => 'ASIGNADOS',
             'icon'    => '',
-            'can' => 'ver-prestamos',
+            'can' => 'ver-asignados',
             
 
             'submenu' => [
                 [
-                    'text' => 'PRESTAMO',
-                    'url'  => '/prestamos',
-                    'can' => 'ver-prestamos',
+                    'text' => 'ASIGNADOS',
+                    'url'  => '/prestamos/materiales',
+                    'can' => 'ver-asignados',
                     
                 ],
                 [
-                    'text' => 'DEVOLUCION',
-                    'url'  => '/prestamos/devoluciones',
-                    'can' => 'ver-prestamos',
+                    'text' => 'PRESTADOS',
+                    'url'  => '/prestamos-amd',
+                    'can' => 'ver-asignados',
                 ],
                
                
             ],
         ],
+        //rol seguridad
         [
-            'text'    => 'ASIGNACION',
+            'text'    => 'PRESTAMOS',
             'icon'    => '',
-            'can' => 'ver-asignacion',
-           
+            'can' => 'ver-seguridad',
+            
 
             'submenu' => [
                 [
-                    'text' => 'ASIGNAR',
-                    'url'  => '/asignacion',
-                    'can' => 'ver-asignacion',
+                    'text' => 'REALIZAR PRESTAMO',
+                    'url'  => '/seguridad/scanear',
+                    'can' => 'ver-seguridad',
+                    
                 ],
                 [
-                    'text' => 'DEVOLUCION ',
-                    'url'  => '/asignacion/devoluciones',
-                    'can' => 'ver-asignacion',
+                    'text' => 'VER MATERIALES PRESTADOS',
+                    'url'  => '/prestamos-amd',
+                    'can' => 'ver-seguridad',
                 ],
-                
-            ],
-        ],
-           
-       
-            [
-                'text' => 'REPORTES',
-                'url'  => '/reportes',
-                'icon' => '',
-                'can' => 'ver-reportes'
-            ],
-            [
-                'text'    => 'ACTIVIDADES',
-                'icon'    => '',
-                'can' => 'ver-reportes',
-            
-
-                'submenu' => [
-                    [
-                        'text' => 'REGISTROS',
-                        'url'  => '/actividades/registros',
-                        'can' => 'ver-reportes',
-                    ],
-                    [
-                        'text' => 'MOVIMIENTOS',
-                        'url'  => '/actividades/actividades',
-                        'can' => 'ver-reportes'
-                    ],
-                   
-                ],
-            ],
-       
                
-        [
-            'text' => 'VER MATERIALES',
-            'url'  => '/principal',
-            'icon' => '',
-            'can' => 'ver-comun'
-            
+               
+            ],
         ],
+       //rol comun
+       
+           
+    [
+        'text' => 'VER MATERIALES',
+        'url'  => '/principal',
+        'icon' => '',
+        'can' => 'ver-comun'
+        
+    ],
 
-        [
-            'text' => 'Acerca de',
-            'url'  => '/acerca',
-            'icon' => '',
-            'can' => 'ver-acerca' // Ajusta esto según tus necesidades
-        ],
-            
+    [
+        'text' => 'Acerca de',
+        'url'  => '/acerca',
+        'icon' => '',
+        'can' => 'ver-acerca' // Ajusta esto según tus necesidades
+    ],
+        
         ],
 
     

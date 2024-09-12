@@ -3,7 +3,10 @@
 @section('title', 'MATERIALES ITSZ')
 
 @section('content_header')
-    <h2>MATERIALES ASIGNADOS</h2>
+    <div class="text-center">
+        <h2>MATERIALES ASIGNADOS</h2>
+    </div>
+
 @stop
 
 @section('content')
@@ -15,7 +18,7 @@
     </div>
 </div>
 <table class="table">
-    <thead>
+<thead style="background-color: #0E1264; color: white;">
         <tr>
             <th>ID</th>
             <th>NOMBRE</th>
@@ -82,16 +85,15 @@
             </td>
             <td>
                 @if ($asignacion->status == 2 && $asignacion->prestamos->isNotEmpty())
-                    {{-- Debug statement --}}
-                    {{ dd($asignacion->prestamos) }}
-                    {{ $asignacion->prestamos->first()->user->num_empleado }}
-                    {{ $asignacion->prestamos->first()->user->nombre}}
-                    {{ $asignacion->prestamos->first()->user->a_paterno}}
-                    {{ $asignacion->prestamos->first()->user->a_materno}}
+                    @foreach($asignacion->prestamos as $prestamo)
+                        <span style="color: blue;"> num_empleado:{{  $prestamo->user->num_empleado }}</span> - {{ $prestamo->user->nombre }} {{ $prestamo->user->a_paterno }} {{ $prestamo->user->a_materno }}
+                        <br>
+                    @endforeach
                 @else
                     N/A
                 @endif
             </td>
+
 
 
 

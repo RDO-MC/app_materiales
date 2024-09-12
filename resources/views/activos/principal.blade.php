@@ -3,31 +3,36 @@
 @section('title', 'ACTIVOS NUBE')
 
 @section('content_header')
-<div class="d-flex justify-content-between align-items-center">
-        <h1>ACTIVOS NUBE </h1>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <title>ACTIVOS NUBE</title>
         <a href="{{ route('activos.qr') }}" class="btn btn-info">Imprimir QR</a>
     </div>
 @stop
 
 @section('content')
 
-    <div class="row mt-3">
-        <div class="col-md-6">
-            <button>
-                <a href="{{ route('activos.crear') }}" style="text-decoration: none; color: black;">NUEVO</a>
-            </button>
-        </div>
-        <div class="col-md-6">
-        <input type="text" id="search" class="form-control" placeholder="Buscar">
-        </div>
+<div class="row mt-3">
+    <div class="col-md-6">
+        <button class="btn btn-primary">
+            <a href="{{ route('activos.crear') }}" style="text-decoration: none; color: white;">NUEVO ACTIVO</a>
+        </button>
     </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-6">
+        <input type="text" id="search" class="form-control" placeholder="Buscar">
+    </div>
+</div>
+
    
     
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="activos">
-                    <thead>
+                <thead style="background-color: #0E1264; color: white;">
                         <tr>
                             <th>#</th>
                             <th>FECHA DE ADQUISICION</th>

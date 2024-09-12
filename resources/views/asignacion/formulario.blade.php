@@ -59,34 +59,8 @@
             </div>
 
             <!-- Campos específicos para bienes inmuebles -->
-            @if ($tipo_bien === 'bienes_inmuebles')
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="campo_especifico_inmuebles">Campo Específico para Inmuebles:</label>
-                        <input type="text" name="campo_especifico_inmuebles" class="form-control" id="campo_especifico_inmuebles" placeholder="Campo Específico">
-                    </div>
-                </div>
-            @endif
-
-            <!-- Campos específicos para bienes muebles -->
-            @if ($tipo_bien === 'bienes_muebles')
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="campo_especifico_muebles">Campo Específico para Muebles:</label>
-                        <input type="text" name="campo_especifico_muebles" class="form-control" id="campo_especifico_muebles" placeholder="Campo Específico">
-                    </div>
-                </div>
-            @endif
-
-            <!-- Campos específicos para activos nube -->
-            @if ($tipo_bien === 'activos_nubes')
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label for="campo_especifico_activos_nube">Campo Específico para Activos Nube:</label>
-                        <input type="text" name="campo_especifico_activos_nube" class="form-control" id="campo_especifico_activos_nube" placeholder="Campo Específico">
-                    </div>
-                </div>
-            @endif
+           
+         
 
             <div class="row mb-3">
                 <div class="col-md-4">

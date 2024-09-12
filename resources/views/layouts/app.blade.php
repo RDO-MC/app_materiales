@@ -3,6 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @if(config('adminlte.use_ico_only'))
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    @else
+        <link rel="icon" href="{{ asset(config('adminlte.use_full_favicon')) }}" type="image/x-icon">
+    @endif
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,6 +20,8 @@
 
     <!-- Scripts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+   
+
 </head>
 <body>
     <script src="{{ asset('js/jquery.min.js') }}"></script>
@@ -39,7 +46,7 @@
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
+                            @if (Route::has(''))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
@@ -47,9 +54,15 @@
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                   <!-- <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a> -->
                                 </li>
                             @endif
+                             <!-- Add the link to the PDF manual for guests -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ asset('uploads/itsz/App Web Materiales ITSZ_manual de usuario1.pdf') }}" target="_blank">
+                                        {{ __('Manual de usuario') }}
+                                    </a>
+                                </li>
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false" v-pre>

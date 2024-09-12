@@ -1,106 +1,132 @@
 @extends('adminlte::page')
 
 @section('content')
+<style>
+    body {
+        background-color: #f7f7f7;
+    }
+
+    .welcome-card {
+        background-color: #ffffff;
+        border: 1px solid #e1e1e1;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-top: 50px;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards, moveIn 1s ease-out forwards;
+    }
+
+    .card-header {
+        background-color: #007BFF;
+        color: #ffffff;
+        padding: 20px;
+        border-bottom: 2px solid #0056b3;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .card-body {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .btn-custom {
+        margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .greeting {
+        font-size: 36px;
+        font-weight: bold;
+        color: #007BFF;
+        margin-bottom: 10px;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards, moveIn 1s ease-out forwards;
+    }
+
+    .welcome-text {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 30px;
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards, moveIn 1s ease-out forwards;
+    }
+
+    .highlight-text {
+        font-size: 24px;
+        color: purple;
+        font-weight: bold;
+    }
+
+    /* Fondo gradiente */
+    .gradient-background {
+        background: linear-gradient(45deg, #0056b3, #007BFF);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Animación de movimiento */
+    @keyframes moveIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Botones con animación de hover */
+    .btn-custom {
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+
+</style>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Bienvenido') }}</div>
+            <div class="welcome-card">
+                <div class="card-header gradient-background">
+                    <h2 style="margin-bottom: 0; color: #fff;"> <span class="highlight-text">App Web Materiales ITSZ</span></h2>
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-</head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->nombre }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-
-                                
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" >
-                                        @csrf
-                                        
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
-</html>
-" role="alert">
+                        <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
-                      
                     @endif
 
-                    {{ __('hola') }}
-                    
+                    @guest
+                        <p class="font-size-lg text-primary">¡Hola Invitado!</p>
+                        <p class="welcome-text">Explora nuestra plataforma para gestionar materiales de manera eficiente en el Instituto Tecnológico Superior de Zongolica.</p>
+                        <a href="{{ route('register') }}" class="btn btn-primary btn-custom">Registrarse</a>
+                        <a href="{{ route('login') }}" class="btn btn-success btn-custom">Iniciar Sesión</a>
+                    @else
+                        <p class="font-size-lg text-success greeting">
+                           ¡Bienvenido, {{ Auth::user()->nombre }}!
+                        </p>
+                        <p class="welcome-text">Encuentra y gestiona fácilmente los materiales disponibles. ¡Comienza a utilizar todas las funciones ahora mismo!</p>
+                        
+                    @endguest
                 </div>
             </div>
         </div>

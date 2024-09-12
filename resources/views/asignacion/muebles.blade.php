@@ -3,28 +3,16 @@
 @section('title', 'BIENES MUEBLES')
 
 @section('content_header')
-
-    <h1>BIENES MUEBLES</h1>
-
-
+    <div class="text-center">
+        <h1>BIENES MUEBLES</h1>  
+    </div> 
 @stop
-
+ 
 @section('content')
 @php
     $user_id = Session::get('user_id');
     $bienesMueblesSeleccionados = null; // Asigna un valor apropiado aquí si es necesario
 @endphp
-
- 
-<form method="POST" action="{{ route('asignacion.proceso1') }}" onsubmit="return validateSelection()">
-    @csrf
-    
-    <input type="hidden" name="user_id" value="{{ $user_id }}">
-   
-    <!-- Agrega un campo oculto para almacenar los bienes inmuebles seleccionados -->
-    <input type="hidden" name="selected_bienes" id="selectedBienes" value="">
-    <button type="submit" class="btn btn-primary">Continuar</button>
-</form>
 
 <div class="row">
     <div class="col-md-6">
@@ -32,23 +20,33 @@
             <input type="text" id="search" class="form-control" placeholder="Buscar por Nombre, Descripción o CVE Inventario Interno">
         </div>
     </div>
+    <div class="col-md-6 text-right">
+        <form method="POST" action="{{ route('asignacion.proceso1') }}" onsubmit="return validateSelection()">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user_id }}">
+            <!-- Agrega un campo oculto para almacenar los bienes inmuebles seleccionados -->
+            <input type="hidden" name="selected_bienes" id="selectedBienes" value="">
+            <button type="submit" class="btn btn-primary">Continuar</button>
+        </form>
+    </div>
 </div>
+
 
 <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="muebles-table">
-                    <thead>
+                 <thead style="background-color: #0E1264; color: white;">
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
                             <th>Descripción</th>
+                            <th>cve invenatrio interno</th>
                             <th>Factura</th>
                             <th>N_Serie</th>
                             <th>Importe</th>
                             <th>Partida</th>
                             <th>Identificación del Bien</th>
-                            <th>Marca</th>
                             <th>Estado</th>
                             <th>STATUS</th>
                             <th>IMG</th>
@@ -63,12 +61,12 @@
                             <td>{{ $i++ }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->nombre }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->descripcion }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_interno}}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->factura }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->num_serie }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->importe }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->partida }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->identificacion_del_bien }}</td>
-                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->marca }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->estado }}</td>
                             
                             <td>

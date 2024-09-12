@@ -13,19 +13,22 @@ use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\ActividadesController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\AcercaController;
+use App\Http\Controllers\SeguridadController;
 
 
 
 Route::get('/', function () {
     return view('auth/login');
 });
-
-
+Route::get('/bienes_muebles/{id}', [BienesMueblesController::class, 'show'])->name('bienes.bienes-show');
+Route::get('/bienes_inmuebles/{id}', [BienesInmueblesController::class, 'show'])->name('bienes_inmuebles.show');
+Route::get('/activos_nube/{id}', [ActivosNubeController::class, 'show'])->name('activos_nube.show');
 Auth::routes();
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/acerca', [AcercaController::class, 'index'])->name('acerca');
     Route::get('/roles', 'RoleController@selectRole')->name('roles');
+    
 
 //usuarios
 
@@ -42,11 +45,12 @@ Route::group(['middleware' => ['role:superadmin']], function() {
     Route::get('/activos', [ActivosNubeController::class, 'index'])->name('activos.principal');
     Route::get('/activos/crear', [ActivosNubeController::class, 'create'])->name('activos.crear');
     Route::post('/activos', [ActivosNubeController::class, 'store'])->name('activos.store');
-    Route::get('/activos_nube/{id}', [ActivosNubeController::class, 'show'])->name('activos_nube.show');
+   
     Route::get('/activos/{activos_nube}/editar', [ActivosNubeController::class, 'edit'])->name('activos.editar');
     Route::put('/activos/{activos_nube}', [ActivosNubeController::class, 'update'])->name('activos.update');
     Route::put('/activos/{id}/disable', [ActivosNubeController::class, 'disable'])->name('activos.disable');
     Route::get('/activos/qr', [ActivosNubeController::class, 'imprimirQR'])->name('activos.qr');
+    
 });
 
 Route::group(['middleware' => ['role:superadmin']], function() {
@@ -54,10 +58,12 @@ Route::group(['middleware' => ['role:superadmin']], function() {
     Route::get('/muebles', [BienesMueblesController::class, 'index'])->name('muebles.principal');
     Route::get('/muebles/crear', [BienesMueblesController::class, 'create'])->name('muebles.crear');
     Route::post('/muebles', [BienesMueblesController::class, 'store'])->name('muebles.store');
-    Route::get('/bienes_muebles/{id}', [BienesMueblesController::class, 'show'])->name('bienes_muebles.show');
+   
     Route::get('/muebles/{bienes_muebles}/editar', [BienesMueblesController::class, 'edit'])->name('muebles.editar');
     Route::put('/muebles/{bienes_muebles}', [BienesMueblesController::class, 'update'])->name('muebles.update');
     Route::put('/muebles/{id}/disable', [BienesMueblesController::class, 'disablemuebles'])->name('muebles.disable');
+    Route::get('/muebles/qr', [BienesMueblesController::class, 'imprimirQR'])->name('muebles.qr');
+    
 });
 
 
@@ -66,11 +72,13 @@ Route::group(['middleware' => ['role:superadmin']], function() {
     Route::get('/inmuebles', [BienesInmueblesController::class, 'index'])->name('inmuebles.principal');
     Route::get('/inmuebles/crear', [BienesInmueblesController::class, 'create'])->name('inmuebles.crear');
     Route::post('/inmuebles', [BienesInmueblesController::class, 'store'])->name('inmuebles.store');
-    Route::get('/bienes_inmuebles/{id}', [BienesInmueblesController::class, 'show'])->name('bienes_inmuebles.show');
+
     Route::get('inmuebles/{id}/editar', [BienesInmueblesController::class, 'edit'])->name('inmuebles.editar');
     Route::put('inmuebles/{id}', [BienesInmueblesController::class, 'update'])->name('inmuebles.update');
     Route::put('/inmuebles/{id}/disable', [BienesInmueblesController::class, 'disableUser'])->name('inmuebles.disable');
+    Route::get('/inmuebles/qr', [BienesInmueblesController::class, 'imprimirQR'])->name('inmuebles.qr');
 });
+
 Route::group(['middleware' => ['role:superadmin']], function() {
     //ASIGNACIONES
     Route::get('/asignacion', [AsignacionController::class, 'index'])->name('asignacion.index');
@@ -121,6 +129,16 @@ Route::group(['middleware' => ['role:administrativo']], function() {
     Route::get('/buscar-usuario/{numeroEmpleado}', [AdministrativoController::class, 'buscarUsuario'])->name('buscar-usuario');
     Route::post('/administrativo/guardar', [AdministrativoController::class, 'guardarPrestamo'])->name('administrativo.guardarPrestamo');
     Route::put('/administrativo/realizarDevolucion/{id}', [AdministrativoController::class, 'realizarDevolucion'])->name('administrativo.realizarDevolucion');
+
+});
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('prestamos-amd', [MaterialesController::class, 'materialesPrestados'])->name('prestamos-amd');
+    
+})->middleware('role:administrativo|seguridad');
+
+Route::group(['middleware' => ['role:seguridad']], function() {
+    Route::get('/seguridad/scanear', [SeguridadController::class, 'create'])->name('seguridad.scanear');
+    Route::post('/seguridad', [SeguridadController::class, 'store'])->name('seguridad.store');
 
 });
 

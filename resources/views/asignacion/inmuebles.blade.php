@@ -3,7 +3,10 @@
 @section('title', 'BIENES_INMUEBLES')
 
 @section('content_header')
-    <h1>BIENES INMUEBLES</h1>
+    <div class="text-center">
+        <h1>BIENES INMUEBLES</h1>  
+    </div>
+   
 @stop
 
 @section('content')
@@ -12,22 +15,29 @@
     $bienesInmueblesSeleccionados = null; // Asigna un valor apropiado aquí si es necesario
 @endphp
 
-<form method="POST" action="{{ route('asignacion.proceso') }}" onsubmit="return validateSelection()">
-    @csrf
-    <input type="hidden" name="user_id" value="{{ $user_id }}">
-    <!-- Cambia el tipo del campo oculto a text -->
-    <input type="text" name="selected_bienes" id="selectedBienes" value="" style="display: none">
-    <button type="submit" class="btn btn-primary">Continuar</button>
-</form>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="text" id="search" class="form-control" placeholder="Buscar por Nombre, Descripcion, etc">
+        </div>
+    </div>
+    <div class="col-md-6 text-right">
+        <form method="POST" action="{{ route('asignacion.proceso') }}" onsubmit="return validateSelection()">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user_id }}">
+            <!-- Cambia el tipo del campo oculto a text -->
+            <input type="text" name="selected_bienes" id="selectedBienes" value="" style="display: none">
+            <button type="submit" class="btn btn-primary">Continuar</button>
+        </form>
+    </div>
+</div>
 
-
-<input type="text" id="search" class="form-control" placeholder="Buscar">
 
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="bienes_inmuebles-table">
-                <thead>
+            <thead style="background-color: #0E1264; color: white;">
                     <tr>
                         <th>#</th>
                         <th>NOMBRE</th>
@@ -41,9 +51,6 @@
                         <th>VAL_COMERCIAL</th>
                         <th>IMG_URL</th>
                         <th>QR</th>
-                        <th>ESTADO</th>
-                        <th>NOTAS</th>
-                        <th>STATUS</th>
                         <th>ASIGNAR</th>
                     </tr>
                 </thead>
@@ -67,15 +74,7 @@
                         <td>
                             <img src="{{ $row->qr }}" alt="Imagen del qr" style="max-width: 100px; max-height: 100px;">
                         </td>
-                        <td style="color: {{ $row->status== 0 ? 'white' : '' }}">{{ $row->estado}}</td>
-                        <td style="color: {{ $row->status== 0 ? 'white' : '' }}">{{ $row->nota}}</td>
-                        <td>
-                            @if ($row->status == 0)
-                                Inactivo
-                            @else
-                                Activo
-                            @endif
-                        </td>
+                                              
                         <td>
                             <button class="btn btn-success" id="selectButton_{{ $row->id }}" data-id="{{ $row->id }}" onclick="toggleSelection(this)">
                                 <span id="selectText_{{ $row->id }}">Seleccionar</span>

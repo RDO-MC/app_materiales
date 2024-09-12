@@ -26,19 +26,19 @@ class asignacion extends Model
         'status',
     ];
 
-
+  
     
-    public function bienesInmuebles()
+    public function bienes_inmuebles()
     {
-        return $this->belongsTo(Bienes_inmuebles::class, 'bienes_inmuebles_id');
+        return $this->belongsTo(bienes_inmuebles::class, 'bienes_inmuebles_id');
     }
     public function bienesMuebles()
     {
-        return $this->belongsTo(Bienes_muebles::class, 'bienes_muebles_id');
+        return $this->belongsTo(bienes_muebles::class, 'bienes_muebles_id');
     }
     public function activosNubes()
     {
-        return $this->belongsTo(Activos_nube::class, 'activos_nubes_id');
+        return $this->belongsTo(activos_nube::class, 'activos_nubes_id');
     }
     public function user()
 {
@@ -46,8 +46,12 @@ class asignacion extends Model
 }
 
 
-public function prestamos()
+public function prestamos() 
 {
-    return $this->hasMany(Prestamos::class, 'bienes_muebles_id', 'bienes_inmuebles_id', 'activos_nubes_id');
+    return $this->hasMany(prestamos::class, 'bienes_muebles_id')
+        ->orWhere('bienes_inmuebles_id', '!=', null)
+        ->orWhere('activos_nubes_id', '!=', null);
 }
+
+
 }

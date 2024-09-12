@@ -8,6 +8,9 @@ use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\actividades;
+use PDF;
+use App\Models\prestamos;
+use Illuminate\Support\Facades\View;
 
 class BienesMueblesController extends Controller
 {
@@ -17,21 +20,19 @@ class BienesMueblesController extends Controller
         $bienes_muebles = bienes_muebles::orderByRaw("FIELD(status, 1, 2, 3, 0)")->get();
         return view('muebles.principal', compact('bienes_muebles'));
     }
-
+ 
     public function create()
     {
         $bienes_muebles = bienes_muebles::all();
         return view('muebles.crear', compact('bienes_muebles'));
     }
-    protected function generateQrCode($id)
+    protected function generateQrCode($relativeUrl)
     {
-    // Genera la URL del código QR utilizando el ID del bien inmueble
-    $url = route('bienes_muebles.show', $id);
-
-    // Construir la URL del código QR
-    $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($url) . '&size=200x200';
-
-    return $qrUrl;
+        $url = url($relativeUrl);
+        // Construir la URL del código QR
+        $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($url) . '&size=200x200';
+    
+        return $qrUrl;  
     }
 
     public function store(Request $request)
@@ -83,19 +84,20 @@ class BienesMueblesController extends Controller
             $bienes_muebles->status = '1';
 
             $bienes_muebles->save();
+    
+            // Obtiene el ID del bien inmueble después de guardarlo
+            $bienMuebleId = $bienes_muebles->id;
+    
+           $qr = $this->generateQrCode('/bienes_muebles/' . $bienMuebleId);
+
+    
+            // Actualiza el campo 'qr' en el bien inmueble
+            $bienes_muebles->qr = $qr;
+            $bienes_muebles->save();
+    
             $accion = 'CREÓ UN NUEVO BIEN MUEBLES  CON cve_inventario_interno :';
             $detalles = ['cve_inventario_interno' => $bienes_muebles->cve_inventario_interno];
             $this->registrarActividad($accion, $detalles);
-
-        // Obtiene el ID del bien inmueble después de guardarlo
-        $bienMuebleId = $bienes_muebles->id;
-
-        // Genera el QR Code con la URL completa del bien inmueble
-        $qr = $this->generateQrCode(route('bienes_muebles.show', $bienMuebleId));
-
-        // Actualiza el campo 'qr' en el bien inmueble
-        $bienes_muebles->qr = $qr;
-        $bienes_muebles->save();
 
         return redirect()->route('muebles.principal')->with('success', 'Bien inmueble creado correctamente');
     } else {
@@ -103,11 +105,36 @@ class BienesMueblesController extends Controller
     }    
     }
 
+    public function show($id)
+    { 
     
-    public function show(bienes_muebles $bienes_muebles)
-    {
-        return view('muebles.crear', compact('bienes_muebles'));
+        // Obtener información del bien mueble por ID
+        $bienes_muebles = bienes_muebles::with(['prestamo.user', 'asignacion.user'])->find($id);
+        
+        if ($bienes_muebles && ($bienes_muebles->status == 2 || $bienes_muebles->status == 3)) {
+            // Verifica si el bien está prestado
+            if ($bienes_muebles->status == 2 && $bienes_muebles->prestamo) {
+                $prestamo = $bienes_muebles->prestamo;
+                $usuario_asignado = $prestamo->user;
+    
+                // Pasar la información a la vista
+                return view('muebles.bienes_show', compact('bienes_muebles', 'prestamo', 'usuario_asignado'));
+            }
+    
+            // Verifica si el bien está asignado
+            if ($bienes_muebles->status == 3 && $bienes_muebles->asignacion) {
+                $asignacion = $bienes_muebles->asignacion;
+                $usuario_asignado = $asignacion->user;
+    
+                // Pasar la información a la vista
+                return view('muebles.bienes_show', compact('bienes_muebles', 'asignacion', 'usuario_asignado'));
+            } 
+        }
+    
+        // El bien no está prestado o asignado o no se encontró
+        return view('muebles.bienes_show', compact('bienes_muebles'));
     }
+      
 
     public function edit(bienes_muebles $bienes_muebles)
     {
@@ -171,5 +198,17 @@ class BienesMueblesController extends Controller
             'fecha_hora' => now(),
             // Puedes agregar más información si es necesario
         ]);
+    }
+    public function imprimirQR()
+    {
+        $bienes_muebles = bienes_muebles::all();
+    
+        // Utiliza la vista sin cargarla en el navegador
+        $html = View::make('muebles.qr', compact('bienes_muebles'))->render();
+    
+        $pdf = PDF::loadHTML($html);
+        $pdf->setPaper('letter', 'portrait'); // Tamaño del papel: carta en orientación vertical
+    
+        return $pdf->download('bienes-muebles.qr.pdf');
     }
 }

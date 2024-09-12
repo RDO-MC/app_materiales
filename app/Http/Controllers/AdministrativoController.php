@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Asignacion;
-use App\Models\Prestamos;
+use App\Models\asignacion;
+use App\Models\prestamos;
 use Illuminate\Http\Request;
 use App\Models\bienes_muebles;
 use App\Models\bienes_inmuebles;
@@ -22,14 +22,14 @@ class AdministrativoController extends Controller
         $user = Auth::user();
         
         // Recupera las asignaciones con estado 1 o 2
-        $asignaciones = Asignacion::where('users_id', $user->id)->whereIn('status', [1, 2])->get();
+        $asignaciones = asignacion::where('users_id', $user->id)->whereIn('status', [1, 2])->get();
         
         return view('prestamos.materiales', compact('asignaciones'));
     }
     public function create($id)
 {
     $users = User::where('is_active', 1)->get();
-    $asignacion = Asignacion::findOrFail($id);
+    $asignacion = asignacion::findOrFail($id);
     $usuario = User::find($asignacion->users_id); // Agrega esta línea para obtener el usuario
 
     return view('prestamos.asignacion-prestamo', compact('asignacion', 'users', 'usuario'));
@@ -69,7 +69,7 @@ class AdministrativoController extends Controller
         // Verifica si la asignación es de bienes muebles, inmuebles o activos de nubes
         $asignacion = Asignacion::findOrFail($request->id_bien);
 
-        $prestamo = new Prestamos();
+        $prestamo = new prestamos();
 
         if ($asignacion->bienes_muebles_id) {
             $prestamo->bienes_muebles_id = $asignacion->bienes_muebles_id;

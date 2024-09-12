@@ -16,9 +16,9 @@ class bienes_muebles extends Model
         'cve_inventario_interno',
         'nombre',
         'descripcion',
-        'factura',
+        'factura', 
         'num_serie',
-        'importe',
+        'importe', 
         'partida',
         'identificacion_del_bien',
         'marca',
@@ -29,4 +29,13 @@ class bienes_muebles extends Model
         'estado',
         'status',
     ];
+    
+    public function prestamo()
+    {
+        return $this->hasOne(prestamos::class, 'bienes_muebles_id');
+    }
+    public function asignacion()
+{
+    return $this->hasOne(asignacion::class, 'bienes_muebles_id');
+}
 }

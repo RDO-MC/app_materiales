@@ -3,29 +3,33 @@
 @section('title', 'BIENES_INMUEBLES')
 
 @section('content_header')
-    <h1>BIENES INMUEBLES</h1>
+<div class="d-flex justify-content-between align-items-center">
+        <h1>BIENES INMUEBLES  </h1>
+        <a href="{{ route('inmuebles.qr') }}" class="btn btn-info">Imprimir QR</a>
+    </div>
 @stop
 
 @section('content')
 
 <div class="row mt-3">
-        <div class="col-md-6">
-            <button>
-                <a href="{{ route('inmuebles.crear') }}" style="text-decoration: none; color: black;">NUEVO</a>
-            </button>
-        </div>
-        <div class="col-md-6">
-        <input type="text" id="search" class="form-control" placeholder="Buscar">
-        </div>
+    <div class="col-md-6">
+        <button class="btn btn-primary">
+                <a href="{{ route('inmuebles.crear') }}" style="text-decoration: none; color: white;">NUEVO INMUEBLE</a>
+        </button>
     </div>
+    <div class="col-md-6">
+        <input type="text" id="search" class="form-control" placeholder="Buscar">
+    </div>
+</div>
    
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="bienes_inmuebles-table" >
-                    <thead>
+                <thead style="background-color: #0E1264; color: white;">
                         <tr>
                             <th>#</th>
+                            <th>FECHA</th>
                             <th>NOMBRE</th>
                             <th>DESCRIPCION</th>
                             <th>NUM_ESCRITURA_PROPIEDAD</th>
@@ -37,8 +41,7 @@
                             <th>VAL_COMERCIAL</th>
                             <th>IMG_URL</th>
                             <th>QR</th>
-                            <th>ESTADO</th>
-                            <th>NOTAS</th>
+                            <th>ESTADO</th>   
                             <th>STATUS</th>
                             <th>EDITAR</th>
                             <th>BAJA</th>
@@ -50,8 +53,21 @@
                         <tr style="background-color: {{ $row->status == 0 ? 'red' : ($row->status == 2 ? 'lightgreen' : ($row->status == 3 ? 'lightblue' : 'white')) }}">
 
                             <td>{{ $i++ }}</td>
+                            <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->fecha }}</td>
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->nombre }}</td>
-                            <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->descripcion }}</td>
+                            <td style="color: {{ $row->status == 0 ? 'white' : '' }}">
+                                <?php
+                                    $descripcion = $row->descripcion;
+                                    $descripcion_abreviada = str_word_count($descripcion, 1, 'áéíóúÁÉÍÓÚ'); // Dividir la descripción en palabras
+                                    $descripcion_abreviada = implode(' ', array_slice($descripcion_abreviada, 0, 20)); // Tomar solo las primeras 20 palabras
+                                ?>
+                                <span class="descripcion_abreviada">{{ $descripcion_abreviada }}</span>
+                                @if (str_word_count($descripcion) > 20)
+                                    <span class="ver-mas" style="cursor: pointer; color: blue;">...Ver más</span>
+                                    <span class="descripcion-completa" style="display: none;">{{ substr($descripcion, strlen($descripcion_abreviada)) }}</span>
+                                @endif
+                            </td>
+
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->num_escritura_propiedad }}</td>
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->ins_reg_pub_prop}}</td>
                             <td style="color: {{ $row->status == 0 ? 'white' : '' }}">{{ $row->estado_valuado }}</td>
@@ -67,7 +83,6 @@
                             </td>
 
                             <td style="color: {{ $row->status== 0 ? 'white' : '' }}">{{ $row->estado}}</td>
-                            <td style="color: {{ $row->status== 0 ? 'white' : '' }}">{{ $row->nota}}</td>
                              
                             <td>
                                 @if ($row->status == 0)
@@ -158,5 +173,21 @@ $(document).ready(function() {
         }
     }
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('.ver-mas').forEach(function(element) {
+            element.addEventListener('click', function() {
+                var descripcionAbreviada = this.previousElementSibling;
+                var descripcionCompleta = this.nextElementSibling;
+
+                descripcionAbreviada.style.display = 'none';
+                descripcionCompleta.style.display = 'inline';
+
+                this.style.display = 'none';
+            });
+        });
+    });
+</script>
+
 
 @stop

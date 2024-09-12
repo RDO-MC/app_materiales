@@ -11,16 +11,22 @@
     <form method="POST" action="{{ route('prestamos.search') }}">
         @csrf
         <div class="input-group mb-3">
-            <input type="text" name="query" class="form-control" placeholder=" o número de empleado" aria-label="Buscar" aria-describedby="button-addon">
+            <div class="col-md-4">
+            </div>
+            Generar Resguardo:
+            <div class="col-md-4">
+                <input type="text" name="query" class="form-control" placeholder="Ingrese numero de Empleado" aria-label="Buscar" aria-describedby="button-addon">    
+            </div>
             <button class="btn btn-outline-secondary" type="submit" id="button-addon">Buscar</button>
         </div>
+        
     </form>
 
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="muebles-table">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
                             <th>ID</th>
                             <th>MUEBLES</th>
@@ -43,7 +49,7 @@
                                 <td>{{ optional($prestamo->bienes_muebles)->cve_inventario_interno }}</td>
                                 <td>{{ optional($prestamo->bienes_inmuebles)->num_escritura_propiedad}}</td>
                                 
-                                <td>{{ $prestamo->user->num_empleado }}</td>
+                                <td>{{ $prestamo->user->num_empleado }}-{{ $prestamo->user->nombre }}-{{ $prestamo->user->a_paterno }}-{{ $prestamo->user->a_materno}}</td>
 
                                 <td>{{ $prestamo->lugar_de_prestamo }}</td>
                                 <td>{{ $prestamo->fecha_de_prestamo }}</td>

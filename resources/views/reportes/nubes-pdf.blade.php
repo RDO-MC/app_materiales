@@ -73,7 +73,6 @@
                     <th>CVE CONAC</th>
                     <th>CVE INVENTARIO SEFIPLAN</th>
                     <th>CVE INVENTARIO INTERNO</th>
-                    <th>NOMBRE</th>
                     <th>DESCRIPCION</th>
                     <th>FACTURA</th>
                     <th>NUM. SERIE</th>
@@ -94,7 +93,6 @@
                         <td>{{ $activos->cve_conac }}</td>
                         <td>{{ $activos->cve_inventario_sefiplan }}</td>
                         <td>{{ $activos->cve_inventario_interno }}</td>
-                        <td>{{ $activos->nombre }}</td>
                         <td>{{ $activos->descripcion }}</td>
                         <td>{{ $activos->factura }}</td>
                         <td>{{ $activos->num_serie }}</td>

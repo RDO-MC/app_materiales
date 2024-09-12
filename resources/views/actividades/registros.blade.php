@@ -3,94 +3,136 @@
 @section('title', 'USUARIOS')
 
 @section('content_header')
-    <h1>USUARIOS</h1>
+    <h1 style="color: #3498db;">Usuarios</h1>
 @stop
 
 @section('content')
-   
-
-    <input type="text" id="search" class="form-control" placeholder="BURCAR POR NUMERO DE EMPLEADO O EMAIL">
-
-
+    <div class="row mt-3">
+        <div class="col-md-5">
+            <input type="text" id="search" class="form-control" placeholder="Buscar por número de empleado o correo electrónico">
+        </div>
+    </div>
+    
 
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="registros-table" >
-                    <thead>
+                <table class="table table-bordered table-hover" id="registros-table">
+                    <thead class="thead-dark">
                         <tr>
                             <th>#</th>
-                            <th>USUARIO/ID</th>
-                            <th>FECHA_HORA</th>
-                            <th>DIRECCION IP</th>
-                            <th>ENT/SAL</th>
+                            <th>Usuario/ID</th>
+                            <th>Fecha y Hora</th>
+                            <th>Dirección IP</th>
+                            <th>Entrada/Salida</th>
                         </tr>
                     </thead>
-                <tbody>
+                    <tbody>
                         @php $i=1; @endphp
                         @foreach($registros as $row)
-                        <tr style="background-color: {{ $row->exito == 0 ? 'red' : '' }}">
-                            <td>{{ $row->id }}</td>
-                            <td style="color: {{ $row->exito == 0 ? 'white' : '' }}">
-                                @if ($row->user)
-                                    {{ $row->user->num_empleado }} {{-- Muestra el número de empleado --}}
-                                    {{ $row->user->email }} {{-- Muestra el correo --}}
-                                @else
-                                    Usuario no disponible
-                                @endif
-                            </td>
-                            <td style="color: {{ $row->exito == 0 ? 'white' : '' }}">{{ $row->fecha_hora }}</td>
-                            <td style="color: {{ $row->exito == 0 ? 'white' : '' }}">{{ $row->direccion_ip }}</td>
-                            <td>
-                                @if ($row->exito == 0)
-                                    salió
-                                @else
-                                    entró
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-
-
-                </tbody>
-            </table>
+                            <tr style="background-color: {{ $row->exito == 0 ? '#e74c3c' : '' }}; color: {{ $row->exito == 0 ? 'white' : '' }}">
+                                <td>{{ $row->id }}</td>
+                                <td>
+                                    @if ($row->user)
+                                        <span style="color: #3498db;">Número de Empleado:</span> {{ $row->user->num_empleado }} <br>
+                                        <span style="color: #3498db;">Correo Electrónico:</span> {{ $row->user->email }}
+                                    @else
+                                        Usuario no disponible
+                                    @endif
+                                </td>
+                                <td>{{ $row->fecha_hora }}</td>
+                                <td>{{ $row->direccion_ip }}</td>
+                                <td>
+                                    @if ($row->exito == 0)
+                                        Salió
+                                    @else
+                                        Entró
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-  
-    
-
 @stop
 
 @section('css')
+    <style>
+
+        
+        body {
+            background-color: #ecf0f1;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .form-control {
+            border: 2px solid #3498db;
+            color: #3498db;
+        }
+
+        #registros-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #registros-table th, #registros-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #registros-table tbody tr:hover {
+            background-color: #dfe6e9;
+        }
+    </style>
+    <style>
+        .custom-thead {
+            background-color: #3498db; /* Cambia este color según tus preferencias */
+            color: #ffffff; /* Cambia este color según tus preferencias */
+        }
+    </style>
 
 @stop
 
 @section('js')
-<script>
-$(document).ready(function() {
-    $("#search").on("input", function() {
-        var searchTerm = $(this).val().toLowerCase();
+    <script>
+        $(document).ready(function() {
+            $("#search").on("input", function() {
+                var searchTerm = $(this).val().toLowerCase();
 
-        $("#registros-table tbody tr").each(function() {
-            var row = $(this);
+                $("#registros-table tbody tr").each(function() {
+                    var row = $(this);
 
-            // Encuentra la celda que deseas buscar (en este caso, la segunda y tercera columna)
-            var cellToSearchNumEmpleado = row.find("td:eq(1)"); // 1 representa la segunda columna (num_empleado)
-            var cellToSearchEmail = row.find("td:eq(1)"); // Modificado a 2 para representar la tercera columna (email)
+                    var cellToSearchNumEmpleado = row.find("td:eq(1)");
+                    var cellToSearchEmail = row.find("td:eq(1)");
 
-            // Obtiene el texto de las celdas y convierte a minúsculas para la comparación
-            var textToSearchNumEmpleado = cellToSearchNumEmpleado.text().toLowerCase();
-            var textToSearchEmail = cellToSearchEmail.text().toLowerCase();
+                    var textToSearchNumEmpleado = cellToSearchNumEmpleado.text().toLowerCase();
+                    var textToSearchEmail = cellToSearchEmail.text().toLowerCase();
 
-            // Modifica la condición para buscar en num_empleado y email
-            if (textToSearchNumEmpleado.includes(searchTerm) || textToSearchEmail.includes(searchTerm)) {
-                row.show();
-            } else {
-                row.hide();
-            }
+                    if (textToSearchNumEmpleado.includes(searchTerm) || textToSearchEmail.includes(searchTerm)) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            });
         });
-    });
-});
-</script>
-   
+    </script>
 @stop

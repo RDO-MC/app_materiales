@@ -8,22 +8,23 @@
 
 @section('content')
     <div class="row mt-3">
-        <div class="col-md-12">
-            <button>
-                <a href="/usuarios/crear" style="text-decoration: none; color: black;">NUEVO</a>
+        
+        <div class="col-md-4">
+            <button class="btn-primary">
+                <a href="/usuarios/crear" style="text-decoration: none; color: black;">NUEVO USUARIO</a>
             </button>
         </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        <input type="text" id="search" class="form-control" placeholder="Buscador Rapido">
+        </div>
     </div>
-
-    <input type="text" id="search" class="form-control" placeholder="Buscar">
-
-  
-
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="user-table" >
-                    <thead>
+                <table class="table table-bordered table-hover" id="user-table"  >
+                    <thead class="thead-primary"><!--con  esto  tendremosel encabezado de color negro-->
                         <tr>
                             <th>#</th>
                             <th>NOMBRE</th>
@@ -32,6 +33,7 @@
                             <th>NUM_EMPLEADO</th>
                             <th>TELEFONO</th>
                             <th>CARGO</th>
+                            <th>ROL</th>
                             <th>CAMPUS</th>
                             <th>CORREO</th>
                             <th>ESTADO</th>
@@ -42,7 +44,7 @@
                     <tbody>
                         @php $i=1; @endphp
                         @foreach($users as $row)
-                        <tr style="background-color: {{ $row->is_active == 0 ? 'red' : '' }}">
+                        <tr style="background-color: {{ $row->is_active == 0 ? '#FA6462' : '' }}">
                             <td>{{ $i++ }}</td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->nombre }}</td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->a_paterno }}</td>
@@ -50,6 +52,19 @@
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->num_empleado }}</td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->telefono }}</td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->cargo }}</td>
+                            <td>
+                                @foreach($row->roles as $role)
+                                    @if ($role->name === 'superadmin')
+                                        <span class="badge" style="background-color: #FF5733;">{{ $role->name }}</span>
+                                     @elseif ($role->name === 'administrativo')
+                                        <span class="badge" style="background-color: #33FF57;">{{ $role->name }}</span>
+                                    @elseif ($role->name === 'seguridad')
+                                        <span class="badge" style="background-color: #5733FF;">{{ $role->name }}</span>
+                                    @elseif ($role->name === 'comun')
+                                        <span class="badge" style="background-color: #33A3FF;">{{ $role->name }}</span>
+                                    @endif
+                                @endforeach
+                            </td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->campus }}</td>
                             <td style="color: {{ $row->is_active == 0 ? 'white' : '' }}">{{ $row->email }}</td>
                             <td>
@@ -90,6 +105,19 @@
 @stop
 
 @section('css')
+    <style>
+        .thead-primary th {
+            background-color: #000080;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #D198F1 ;
+            border-color: #3498db;
+        }
+    </style>
+
+    
 
 @stop
 

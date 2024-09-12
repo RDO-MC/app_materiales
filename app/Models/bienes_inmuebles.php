@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Asignacion;
+use App\Models\asignacion;
 
 class bienes_inmuebles extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'fecha', 
         'nombre',
         'descripcion',
         'num_escritura_propiedad',
@@ -27,9 +28,13 @@ class bienes_inmuebles extends Model
 
     ];
 
-     // Relación con el modelo Asignacion
-     public function Asignaciones()
-     {
-         return $this->hasMany(asignacion::class, 'asignaciones_id');
-     }
+    public function prestamo()
+    {
+        return $this->hasOne(prestamos::class, 'bienes_inmuebles_id');
+    }
+    public function asignacion()
+    {
+        return $this->hasOne(asignacion::class, 'bienes_inmuebles_id');
+    }
+    
 }

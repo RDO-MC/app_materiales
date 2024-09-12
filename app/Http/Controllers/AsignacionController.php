@@ -248,7 +248,7 @@ class AsignacionController extends Controller
                 $bien->status = '3'; // Estado asignado, ajusta esto según tu sistema
                 $bien->save();
             }
-        }
+        } 
     
         // Limpia la sesión después de guardar
         Session::forget('selected_bienes');
@@ -327,7 +327,7 @@ class AsignacionController extends Controller
     $asignaciones = Asignacion::whereHas('user', function ($queryBuilder) use ($query) {
         $queryBuilder->where('id', 'like', '%' . $query . '%')
                     ->orWhere('num_empleado', 'like', '%' . $query . '%');
-    })->get();
+    })->get(); 
 
     return view('asignacion.devoluciones', compact('asignaciones', 'query'));
 }

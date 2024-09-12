@@ -17,7 +17,7 @@ class Prestamos extends Model
         'lugar_de_prestamo',
         'fecha_de_prestamo',
         'estado',
-        'notas',
+        'notas', 
         'fecha_de_devolucion',
         'observaciones',
         'status',

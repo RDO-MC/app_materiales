@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\asignacion;
 
 class activos_nube extends Model
 {
@@ -33,9 +34,13 @@ class activos_nube extends Model
     ];
 
    
-    public function asignaciones()
+    public function prestamo()
+    {
+        return $this->hasOne(prestamos::class, 'activos_nubes_id');
+    }
+    public function asignacion()
 {
-    return $this->hasMany(asignacion::class, 'activos_nubes_id');
+    return $this->hasOne(asignacion::class, 'activos_nubes_id');
 }
 
 }

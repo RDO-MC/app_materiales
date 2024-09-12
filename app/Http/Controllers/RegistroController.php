@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\registro;
+use App\Models\Registro;
 use Illuminate\Http\Request;
 
 class RegistroController extends Controller
@@ -15,10 +15,10 @@ class RegistroController extends Controller
     public function index()
     {
             // Obtener todos los registros de la tabla "registro"
-    $registros = registro::all();
-    
-    // Pasar los registros a la vista 'registros.principal'
-    return view('actividades.registros', compact('registros'));
+        $registros = Registro::orderBy('fecha_hora', 'desc')->get();
+
+            // Pasar los registros a la vista 'actividades.registros'
+        return view('actividades.registros', compact('registros'));
     }
 
     /**

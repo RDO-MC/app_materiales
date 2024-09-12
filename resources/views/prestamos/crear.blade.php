@@ -1,12 +1,14 @@
 @extends('adminlte::page')
 
 @section('content')
-<div class="container">
+<div class="container">   
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Crear Préstamo de Bienes Muebles') }}</div>
                 <div class="card-body">
+
+                
                     <form method="POST" action="{{ route('prestamos.store') }}">
                         @csrf
                         <div class="row mb-3">
@@ -49,7 +51,7 @@
                                 <div class="col-md-8">
                                     <select id="bienes_muebles" class="form-control @error('bienes_muebles') is-invalid @enderror" name="bienes_muebles[]" multiple>
                                         @foreach ($bienes_muebles as $material)
-                                            <option value="{{ $material->id }}"> id:{{ $material->id }} marca:{{ $material->marca }}     nombre:{{ $material->nombre }}</option>
+                                            <option value="{{ $material->id }}"> id:{{ $material->id }} cve_inventario_interno:{{ $material->cve_inventario_interno }}     nombre:{{ $material->nombre }}</option>
                                         @endforeach
                                     </select>
                                     @error('bienes_muebles')
@@ -68,7 +70,7 @@
                                 <div class="col-md-8">
                                     <select id="bienes_inmuebles" class="form-control @error('bienes_inmuebles') is-invalid @enderror" name="bienes_inmuebles[]" multiple>
                                         @foreach ($bienes_inmuebles as $material)
-                                            <option value="{{ $material->id }}">{{ $material->nombre }}</option>
+                                            <option value="{{ $material->id }}">id:{{ $material->id }} num_escritura_propiedad:{{$material->num_escritura_propiedad}}</option>
                                         @endforeach
                                     </select>
                                     @error('bienes_inmuebles')

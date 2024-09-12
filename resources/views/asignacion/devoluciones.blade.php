@@ -3,22 +3,31 @@
 @section('title', 'DEVOLUCIONES DE ASIGNACION')
 
 @section('content_header')
-    <h1>DEVOLUCIONES DE ASIGNACION</h1>
-</section>
+    <div class="text-center">
+        <h2>DEVOLUCION DE ASIGNADOS</h2>
+    </div>
 
-<form method="POST" action="{{ route('asignacion.search') }}">
+
+    <form method="POST" action="{{ route('asignacion.search') }}">
     @csrf
-    <div class="input-group mb-3">
-        <input type="text" name="query" class="form-control" placeholder="Buscar por nombre o número de empleado" aria-label="Buscar" aria-describedby="button-addon">
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon">Buscar</button>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" name="query" class="form-control" placeholder="Busqueda por numero de empleado para generar resguardo " aria-label="Buscar" aria-describedby="button-addon">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon">Buscar</button>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
+
 
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-bordered table-hover" id="muebles-table">
-                <thead>
+            <thead style="background-color: #0E1264; color: white;">
                     <tr>
                         <th>ID</th>
                         <th>MUEBLES</th>
@@ -28,7 +37,7 @@
                         <th>LUGAR DE ASIGNACION</th>
                         <th>FECHA DE ASIGNACIONn</th>
                         <th>ESTADO</th>
-                        <th>NOTAS</th>
+                        <th>LUGAR DE ASIGNACION</th>
                         <th>STATUS</th>
                         <th>ACCION</th>
                     </tr>
@@ -38,13 +47,15 @@
                         <tr>
                             <td>{{ $asignacion->id }}</td>
                             <td>{{ optional($asignacion->bienesMuebles)->cve_inventario_interno }}</td>
-                            <td>{{ optional($asignacion->bienesInmuebles)->descripcion }}</td>
+                            <td>{{ optional($asignacion->bienes_inmuebles)->num_escritura_propiedad }}</td>
                             <td>{{ optional($asignacion->activosNubes)->cve_inventario_interno }}</td>
-                            <td>{{ optional($asignacion->user)->num_empleado }}</td>
+                            <td>
+                                {{ optional($asignacion->user)->num_empleado }} - {{ optional($asignacion->user)->nombre }} -{{ optional($asignacion->user)->a_paterno }}-{{ optional($asignacion->user)->a_materno }}
+                            </td>
                             <td>{{ $asignacion->lugar_asignacion }}</td>
                             <td>{{ $asignacion->fecha_de_asignacion }}</td>
                             <td>{{ $asignacion->estado }}</td>
-                            <td>{{ $asignacion->notas }}</td>
+                            <td>{{ $asignacion->lugar_asignacion }}</td>
                             <td>
                                     @if($asignacion->status == 2)
                                        Asignado-Prestado

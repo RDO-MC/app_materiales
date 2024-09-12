@@ -13,7 +13,7 @@
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="actividades-table">
-                    <thead>
+                    <thead class="thead-dark">
                         <tr>
                             <th>#</th>
                             <th>USUARIO/ID</th>

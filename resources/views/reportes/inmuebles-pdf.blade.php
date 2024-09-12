@@ -71,7 +71,6 @@
             <thead>
                 <tr>
                     <th>#</th>      
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Número de Escritura de Propiedad</th>
@@ -83,8 +82,7 @@
                     <th>Valor Comercial</th>
                     <th>Estado</th>
                     <th>Status</th>
-                    <th>Fecha de Creación</th>
-                    <th>Fecha de Actualización</th>
+                  
                 </tr>
             </thead>
             <tbody>
@@ -96,7 +94,6 @@
                     @foreach ($datos as $bienInmueble)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $bienInmueble->id }}</td>
                             <td>{{ $bienInmueble->nombre }}</td>
                             <td>{{ $bienInmueble->descripcion }}</td>
                             <td>{{ $bienInmueble->num_escritura_propiedad }}</td>
@@ -118,8 +115,7 @@
                                     Activo
                                 @endif
                             </td>
-                            <td>{{ $bienInmueble->created_at }}</td>
-                            <td>{{ $bienInmueble->updated_at }}</td>
+                          
                         </tr>
                         @php
                             $totalValorComercial += $bienInmueble->val_comercial;

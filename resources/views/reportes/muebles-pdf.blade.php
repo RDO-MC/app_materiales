@@ -67,24 +67,19 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>ID</th>
                     <th>Fecha</th>
                     <th>Cve Conac</th>
                     <th>Cve Inventario Sefiplan</th>
                     <th>Cve Inventario Interno</th>
-                    <th>Nombre</th>
+                    <th>Descripcion</th>
                     <th>Factura</th>
                     <th>Número de Serie</th>
                     <th>Importe</th>
                     <th>Partida</th>
                     <th>Identificación del Bien</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Nota</th>
                     <th>Estado</th>
                     <th>Status</th>
-                    <th>Fecha de Creación</th>
-                    <th>Fecha de Actualización</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -99,20 +94,16 @@
                     @foreach ($datos as $bienMueble)
                         <tr>
                             <td>{{ $i++ }}</td>
-                            <td>{{ $bienMueble->id }}</td>
                             <td>{{ $bienMueble->fecha }}</td>
                             <td>{{ $bienMueble->cve_conac }}</td>
                             <td>{{ $bienMueble->cve_inventario_sefiplan }}</td>
                             <td>{{ $bienMueble->cve_inventario_interno }}</td>
-                            <td>{{ $bienMueble->nombre }}</td>
+                            <td>{{ $bienMueble->descripcion }}</td>
                             <td>{{ $bienMueble->factura }}</td>
                             <td>{{ $bienMueble->num_serie }}</td>
                             <td>${{ $bienMueble->importe }}</td>
                             <td>{{ $bienMueble->partida }}</td>
                             <td>{{ $bienMueble->identificacion_del_bien }}</td>
-                            <td>{{ $bienMueble->marca }}</td>
-                            <td>{{ $bienMueble->modelo }}</td>
-                            <td>{{ $bienMueble->nota }}</td>
                             <td>{{ $bienMueble->estado }}</td>
                             <td>
                                 @if ($bienMueble->status == 0)
@@ -137,8 +128,7 @@
                                     @endphp
                                 @endif
                             </td>
-                            <td>{{ $bienMueble->created_at }}</td>
-                            <td>{{ $bienMueble->updated_at }}</td>
+                          
                         </tr>
                         @php
                             $totalImporte += $bienMueble->importe;

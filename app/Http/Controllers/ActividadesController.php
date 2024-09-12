@@ -10,11 +10,14 @@ class ActividadesController extends Controller
 
     public function index()
     {
-        $actividades = actividades::all();
+       // $actividades = actividades::all();
+        $actividades = actividades::orderBy('created_at', 'desc')->get();
     
     // Pasar los registros a la vista 'registros.principal'
     return view('actividades.actividades', compact('actividades'));
     }
+
+ 
 
     /**
      * Show the form for creating a new resource.

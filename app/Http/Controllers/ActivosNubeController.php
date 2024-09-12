@@ -30,18 +30,14 @@ class ActivosNubeController extends Controller
         $activos_nube = activos_nube::all();
         return view('activos.crear', compact('activos_nube'));
     }
-    protected function generateQrCode($id)
+    protected function generateQrCode($relativeUrl)
     {
-    // Genera la URL del código QR utilizando el ID del activo nube
-    $url = route('activos_nube.show', $id);
-
-    // Construir la URL del código QR
-    $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($url) . '&size=200x200';
-
-    return $qrUrl;
+        $url = url($relativeUrl);
+        // Construir la URL del código QR
+        $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?data=' . urlencode($url) . '&size=200x200';
+    
+        return $qrUrl;
     }
-
-   
     public function store(Request $request)
     {
         $request->validate([
@@ -99,7 +95,7 @@ class ActivosNubeController extends Controller
         $activoNubeId = $activos_nube->id;
 
         // Genera el QR Code con la URL completa del bien inmueble
-        $qr = $this->generateQrCode(route('activos_nube.show', $activoNubeId));
+        $qr = $this->generateQrCode('/activos_nube/'. $activoNubeId);
 
         // Actualiza el campo 'qr' en el bien inmueble
         $activos_nube->qr = $qr;
@@ -111,10 +107,36 @@ class ActivosNubeController extends Controller
     }    
     }
 
-    public function show(activos_nube $activos_nube)
-    {
-        return view('activos.crear', compact('activos_nube'));
-    }
+   
+        // El bien no está prestado o asignado o no se encontró
+        public function show($id)
+        { 
+            // Obtener información del bien mueble por ID
+            $activos_nube = activos_nube::with(['prestamo.user', 'asignacion.user'])->find($id);
+            
+            if ($activos_nube && ($activos_nube->status == 2 || $activos_nube->status == 3)) {
+                // Verifica si el bien está prestado
+                if ($activos_nube->status == 2 && $activos_nube->prestamo) {
+                    $prestamo = $activos_nube->prestamo;
+                    $usuario_asignado = $prestamo->user;
+        
+                    // Pasar la información a la vista
+                    return view('activos.activos_show', compact('activos_nube', 'prestamo', 'usuario_asignado'));
+                }
+        
+                // Verifica si el bien está asignado
+                if ($activos_nube->status == 3 && $activos_nube->asignacion) {
+                    $asignacion = $activos_nube->asignacion;
+                    $usuario_asignado = $asignacion->user;
+        
+                    // Pasar la información a la vista
+                    return view('activos.activos_show', compact('activos_nube', 'asignacion', 'usuario_asignado'));
+                }
+            }
+        
+            // El bien no está prestado o asignado o no se encontró
+            return view('activos.activos_show', compact('activos_nube'));
+        }
 
     
     public function edit(activos_nube $activos_nube)
@@ -186,15 +208,16 @@ class ActivosNubeController extends Controller
     }
     ///IMPRIMIR QR 
     public function imprimirQR()
-    {
-        $activos_nube = activos_nube::all();
-    
-        // Utiliza la vista sin cargarla en el navegador
-        $html = View::make('activos.qr', compact('activos_nube'))->render();
-    
-        $pdf = PDF::loadHTML($html);
-        $pdf->setPaper('letter', 'portrait'); // Tamaño del papel: carta en orientación vertical
-    
-        return $pdf->download('activos.qr.pdf');
-    }
+{
+    $activos_nube = activos_nube::all();
+
+    // Utiliza la vista sin cargarla en el navegador
+    $html = View::make('activos.qr', compact('activos_nube'))->render();
+
+    $pdf = PDF::loadHTML($html);
+    $pdf->setPaper('letter', 'portrait'); // Tamaño del papel: carta en orientación vertical
+
+    return $pdf->download('activos.qr.pdf');
 }
+}
+ 

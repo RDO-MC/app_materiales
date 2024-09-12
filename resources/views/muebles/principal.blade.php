@@ -3,14 +3,18 @@
 @section('title', 'BIENES MUEBLES')
 
 @section('content_header')
- <h1>BIENES MUEBLES</h1>
+<div class="d-flex justify-content-between align-items-center">
+        <h1>BIENES MUEBLES  </h1>
+        <a href="{{ route('muebles.qr') }}" class="btn btn-info">Imprimir QR</a>
+</div>
 @stop
+
 
 @section('content')
     <div class="row mt-3">
         <div class="col-md-6">
-            <button>
-                <a href="{{ route('muebles.crear') }}" style="text-decoration: none; color: black;">NUEVO</a>
+        <button class="btn btn-primary">
+                <a href="{{ route('muebles.crear') }}" style="text-decoration: none; color: white;">NUEVO BIEN</a>
             </button>
         </div>
         <div class="col-md-6">
@@ -22,7 +26,7 @@
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="muebles-table">
-                    <thead>
+                <thead style="background-color: #0E1264; color: white;">
                         <tr>
                             <th>#</th>
                             <th>FECHA</th>
@@ -55,8 +59,8 @@
                             <td>{{ $i++ }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->fecha }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_conac }}</td>
-                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_sefiplan }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_interno }}</td>
+                            <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->cve_inventario_sefiplan }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->nombre }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->descripcion }}</td>
                             <td style="color: {{ $mueble->status == 0 ? 'white' : '' }}">{{ $mueble->factura }}</td>
@@ -123,6 +127,7 @@
 
 @section('css')
 
+
 @stop
 
 @section('js')
@@ -148,5 +153,17 @@
 
 
 </script>
+<script>
+    function confirmAction(mueblesId, status) {
+        var action = status ? 'dar de baja' : 'dar de alta';
+        var confirmationMessage = '¿Estás seguro de que deseas ' + action + '  este Bien Mueble?';
 
+        if (confirm(confirmationMessage)) {
+            document.getElementById('disable-form-' + mueblesId).submit();
+        } else {
+            // El usuario canceló la acción
+            return false;
+        }
+    }
+</script>
 @stop

@@ -5,11 +5,11 @@ use App\Models\prestamos;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\bienes_muebles;
-use App\Models\bienes_inmuebles;
+use App\Models\bienes_inmuebles;  
 use Illuminate\Support\Facades\View;
 use App\Models\actividades;////////////////////////////////////////////////////
 class PrestamosController extends Controller
-{
+{ 
     public function index()
     {
         $prestamos = prestamos::all(); // Recupera todos los préstamos desde tu modelo Prestamo

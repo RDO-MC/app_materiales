@@ -22,16 +22,16 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([ // Utiliza la clase completa con el namespace
-            'nombre' => 'david',
-            'a_paterno' => 'xochicale',
-            'a_materno' => 'cueyactle',
+            'nombre' => 'admin',
+            'a_paterno' => 'admin',
+            'a_materno' => 'admin',
             'num_empleado' => '98765',
             'telefono' => '2789634514',
             'cargo' => 'empleado',
             'campus' => 'zongolica',
-            'email' => 'acdcdestruc@gmail.com',
+            'email' => 'superadmin@gmail.com',
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 
             'remember_token' => Str::random(10),
         ])->assignRole('superadmin');
 

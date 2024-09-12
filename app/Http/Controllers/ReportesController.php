@@ -25,19 +25,19 @@ class ReportesController extends Controller
         switch ($tipoReporte) {
             case 'bienes_muebles':
                 $vista = 'reportes.muebles';
-                $datos = bienes_muebles::whereBetween('created_at', [$fechaInicio, $fechaFin])
+                $datos = bienes_muebles::whereBetween('fecha', [$fechaInicio, $fechaFin])
                     ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                     ->get();
                 break;
             case 'bienes_inmuebles':
                 $vista = 'reportes.inmuebles';
-                $datos = bienes_inmuebles::whereBetween('created_at', [$fechaInicio, $fechaFin])
+                $datos = bienes_inmuebles::whereBetween('fecha', [$fechaInicio, $fechaFin])
                     ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                     ->get();
                 break;
             case 'activos_nubes':
                 $vista = 'reportes.nubes';
-                $datos = activos_nube::whereBetween('created_at', [$fechaInicio, $fechaFin])
+                $datos = activos_nube::whereBetween('fecha_adquisicion', [$fechaInicio, $fechaFin])
                     ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                     ->get();
                 break;
@@ -67,21 +67,21 @@ class ReportesController extends Controller
     switch ($tipoReporte) {
         case 'bienes_muebles':
             $vista = 'reportes.muebles-pdf';
-            $datos = bienes_muebles::whereBetween('created_at', [$fechaInicio, $fechaFin])
+            $datos = bienes_muebles::whereBetween('fecha', [$fechaInicio, $fechaFin])
                 ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                 ->get();
             $nombreArchivo = 'bienes_muebles_informe.pdf';
             break;
         case 'bienes_inmuebles':
             $vista = 'reportes.inmuebles-pdf';
-            $datos = bienes_inmuebles::whereBetween('created_at', [$fechaInicio, $fechaFin])
+            $datos = bienes_inmuebles::whereBetween('fecha', [$fechaInicio, $fechaFin])
                 ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                 ->get();
             $nombreArchivo = 'bienes_inmuebles_informe.pdf';
             break;
         case 'activos_nubes':
             $vista = 'reportes.nubes-pdf';
-            $datos = activos_nube::whereBetween('created_at', [$fechaInicio, $fechaFin])
+            $datos = activos_nube::whereBetween('fecha_adquisicion', [$fechaInicio, $fechaFin])
                 ->orderByRaw("FIELD(status, 1, 2, 3, 0)")
                 ->get();
             $nombreArchivo = 'activos_nubes_informe.pdf';

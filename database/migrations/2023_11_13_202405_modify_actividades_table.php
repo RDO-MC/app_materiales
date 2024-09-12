@@ -8,7 +8,7 @@ class ModifyActividadesTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
+     * @return void hola a todos 
      */
     public function up()
     {

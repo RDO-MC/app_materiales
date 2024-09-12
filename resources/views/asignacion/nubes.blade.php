@@ -3,7 +3,9 @@
 @section('title', 'ACTIVOS NUBE')
  
 @section('content_header')
- <h1>ACTIVOS NUBE</h1>
+    <div class="text-center">
+        <h1>ACTIVOS EN LA NUBE</h1>  
+    </div>  
 @stop
 
 @section('content')
@@ -12,25 +14,31 @@
     $activosNubesSeleccionados = null; // Asigna un valor apropiado aquí si es necesario
 @endphp
 
-<form method="POST" action="{{ route('asignacion.proceso2') }}" onsubmit="return validateSelection()">
-    @csrf
-    <input type="hidden" name="user_id" value="{{ $user_id }}">
-    <!-- Cambia el tipo del campo oculto a text -->
-    <input type="text" name="selected_bienes" id="selectedBienes" value="" style="display: none">
-    <button type="submit" class="btn btn-primary">Continuar</button>
-</form>
+
 <div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <input type="text" id="search" class="form-control" placeholder="Buscar por Nombre, Descripción o CVE Inventario Interno">
         </div>
     </div>
+
+    <div class="col-md-6 text-right">
+        <form   form method="POST" action="{{ route('asignacion.proceso2') }}" onsubmit="return validateSelection()">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user_id }}">
+             <!-- Cambia el tipo del campo oculto a text -->
+            <input type="text" name="selected_bienes" id="selectedBienes" value="" style="display: none">
+             <button type="submit" class="btn btn-primary">Continuar</button>
+        </form>
+    </div>
 </div>
+
+
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="activos_nube">
-                    <thead>
+                <thead style="background-color: #0E1264; color: white;">
                         <tr>
                             <th>#</th>
                             <th>FECHA DE ADQUISICION</th>
